@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "SweetieNotes (Chrome - Port 8888)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "args": [
+                "--web-port=8888"
+            ]
+        },
+        {
+            "name": "SweetieNotes (Web Server - Port 8888)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "web-server",
+            "args": [
+                "--web-port=8888"
+            ]
+        },
+        {
+            "name": "SweetieNotes (Windows)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "windows"
+        }
+    ]
+}
