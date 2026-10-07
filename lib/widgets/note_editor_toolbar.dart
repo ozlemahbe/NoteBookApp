@@ -71,13 +71,10 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 1),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
     _slideController.forward();
   }
 
@@ -213,8 +210,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
         children: highlightColors.map((color) {
           final isSelected = widget.currentHighlightColor == color;
           return GestureDetector(
-            onTap: () => widget.onHighlightColorSelected(
-                color ?? Colors.transparent),
+            onTap: () =>
+                widget.onHighlightColorSelected(color ?? Colors.transparent),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: 30,
@@ -226,27 +223,33 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                   color: isSelected
                       ? AppTheme.deepLavender
                       : color == null
-                          ? Colors.grey.withValues(alpha: 0.3)
-                          : Colors.white,
+                      ? Colors.grey.withValues(alpha: 0.3)
+                      : Colors.white,
                   width: isSelected ? 2.5 : 1.5,
                 ),
                 boxShadow: [
                   if (isSelected)
                     BoxShadow(
-                      color: (color ?? AppTheme.primaryLavender)
-                          .withValues(alpha: 0.4),
+                      color: (color ?? AppTheme.primaryLavender).withValues(
+                        alpha: 0.4,
+                      ),
                       blurRadius: 6,
                     ),
                 ],
               ),
               child: color == null
-                  ? Icon(Icons.format_color_reset_rounded,
+                  ? Icon(
+                      Icons.format_color_reset_rounded,
                       size: 16,
-                      color: Colors.grey.withValues(alpha: 0.5))
+                      color: Colors.grey.withValues(alpha: 0.5),
+                    )
                   : isSelected
-                      ? const Icon(Icons.check_rounded,
-                          size: 16, color: AppTheme.deepLavender)
-                      : null,
+                  ? const Icon(
+                      Icons.check_rounded,
+                      size: 16,
+                      color: AppTheme.deepLavender,
+                    )
+                  : null,
             ),
           );
         }).toList(),
@@ -288,8 +291,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                   '${size.toInt()}',
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight:
-                        isSelected ? FontWeight.w700 : FontWeight.w500,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: isSelected
                         ? AppTheme.deepLavender
                         : AppTheme.textMuted,
@@ -353,8 +355,11 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                 ),
                 child: Center(
                   child: icon == null
-                      ? Icon(Icons.block_rounded,
-                          size: 18, color: Colors.grey.withValues(alpha: 0.5))
+                      ? Icon(
+                          Icons.block_rounded,
+                          size: 18,
+                          color: Colors.grey.withValues(alpha: 0.5),
+                        )
                       : Icon(
                           icon,
                           size: 20,
@@ -436,7 +441,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
             isActive: _showHighlightColors,
             onTap: _toggleHighlightColors,
             tooltip: 'Yazı Rengi',
-            iconColor: widget.currentHighlightColor != null &&
+            iconColor:
+                widget.currentHighlightColor != null &&
                     widget.currentHighlightColor != Colors.transparent
                 ? widget.currentHighlightColor
                 : null,
@@ -469,7 +475,9 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
             isActive: _showIconOptions,
             onTap: _toggleIconOptions,
             tooltip: 'Simge Ekle',
-            iconColor: widget.currentIcon != null ? AppTheme.deepLavender : null,
+            iconColor: widget.currentIcon != null
+                ? AppTheme.deepLavender
+                : null,
           ),
 
           _buildDivider(),
@@ -523,15 +531,16 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
               borderRadius: BorderRadius.circular(14),
             ),
             child: Center(
-              child: customChild ??
+              child:
+                  customChild ??
                   Icon(
                     icon,
                     size: 21,
                     color: !enabled
                         ? AppTheme.textHint.withValues(alpha: 0.4)
                         : isActive
-                            ? AppTheme.deepLavender
-                            : iconColor ?? AppTheme.textMuted,
+                        ? AppTheme.deepLavender
+                        : iconColor ?? AppTheme.textMuted,
                   ),
             ),
           ),
@@ -578,16 +587,18 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: fontWeight,
-                  fontStyle:
-                      isItalicStyle ? FontStyle.italic : FontStyle.normal,
+                  fontStyle: isItalicStyle
+                      ? FontStyle.italic
+                      : FontStyle.normal,
                   color: isActive ? AppTheme.deepLavender : AppTheme.textMuted,
                   decoration: hasUnderline
                       ? TextDecoration.underline
                       : hasStrikethrough
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                  decorationColor:
-                      isActive ? AppTheme.deepLavender : AppTheme.textMuted,
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                  decorationColor: isActive
+                      ? AppTheme.deepLavender
+                      : AppTheme.textMuted,
                 ),
               ),
             ),

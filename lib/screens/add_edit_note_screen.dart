@@ -141,7 +141,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     setState(() {});
   }
 
-  void _toggleOrInsertChecklist() {
+  void _insertChecklist() {
     final text = _contentController.text;
     final selection = _contentController.selection;
     if (selection.baseOffset < 0) return; // No selection
@@ -157,16 +157,11 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     
     final currentLine = text.substring(lineStart, lineEnd);
     
-    if (currentLine.startsWith('☐ ')) {
-      // Toggle to ☑
-      final newLine = '☑ ${currentLine.substring(2)}';
+    if (currentLine.startsWith('☐ ') || currentLine.startsWith('☑ ')) {
+      // Remove it if it already has one
+      final newLine = currentLine.substring(2);
       _contentController.text = text.substring(0, lineStart) + newLine + text.substring(lineEnd);
-      _contentController.selection = TextSelection.collapsed(offset: cursorPos);
-    } else if (currentLine.startsWith('☑ ')) {
-      // Toggle to ☐
-      final newLine = '☐ ${currentLine.substring(2)}';
-      _contentController.text = text.substring(0, lineStart) + newLine + text.substring(lineEnd);
-      _contentController.selection = TextSelection.collapsed(offset: cursorPos);
+      _contentController.selection = TextSelection.collapsed(offset: (cursorPos - 2).clamp(0, _contentController.text.length));
     } else {
       // Insert new
       String prefix = '';
@@ -593,7 +588,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                   NoteEditorToolbar(
                     onDrawingTap: () =>
                         setState(() => _showDrawingCanvas = true),
-                    onChecklistTap: _toggleOrInsertChecklist,
+                    onChecklistTap: _insertChecklist,
                     onBoldTap: () => _toggleTextFormat('bold'),
                     onItalicTap: () => _toggleTextFormat('italic'),
                     onUnderlineTap: () => _toggleTextFormat('underline'),
