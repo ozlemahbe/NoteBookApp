@@ -19,6 +19,7 @@ class HomeNotesScreen extends StatefulWidget {
   final Function(String) onDeleteNote;
   final Function(NoteModel) onCopyNote;
   final VoidCallback? onOpenDrawer;
+  final VoidCallback? onOpenSettings;
 
   const HomeNotesScreen({
     super.key,
@@ -28,6 +29,7 @@ class HomeNotesScreen extends StatefulWidget {
     required this.onDeleteNote,
     required this.onCopyNote,
     this.onOpenDrawer,
+    this.onOpenSettings,
   });
 
   @override
@@ -251,6 +253,7 @@ class _HomeNotesScreenState extends State<HomeNotesScreen> {
                       child: SearchBarWidget(
                         controller: _searchController,
                         onMenuTap: widget.onOpenDrawer,
+                        onSettingsTap: widget.onOpenSettings,
                         onChanged: (val) {
                           setState(() {
                             _searchQuery = val;

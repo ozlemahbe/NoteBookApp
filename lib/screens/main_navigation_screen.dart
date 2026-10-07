@@ -11,6 +11,7 @@ import 'auth_screen.dart';
 import 'home_notes_screen.dart';
 import 'notebooks_screen.dart';
 import 'settings_screen.dart';
+import 'trash_screen.dart';
 
 /// Main navigation container managing active tabs and core mock state
 /// using standard StatefulWidget (no external state management as requested)
@@ -30,6 +31,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   // In-memory mock state for classic notes
   late List<NoteModel> _notes;
+
+  // In-memory trash bin for deleted notes
+  final List<NoteModel> _deletedNotes = [];
 
   // In-memory mock state for custom cover notebooks
   late List<NotebookModel> _notebooks;
@@ -64,17 +68,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final noteToDelete = _notes.firstWhere((n) => n.id == id);
     setState(() {
       _notes.removeWhere((n) => n.id == id);
+      _deletedNotes.insert(0, noteToDelete);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('"${noteToDelete.title}" silindi'),
+        content: Text('"${noteToDelete.title}" çöp kutusuna taşındı'),
         action: SnackBarAction(
           label: 'Geri Al',
           textColor: AppTheme.pastelPink,
           onPressed: () {
             setState(() {
-              _notes.add(noteToDelete);
+              _deletedNotes.removeWhere((n) => n.id == noteToDelete.id);
+              _notes.insert(0, noteToDelete);
             });
           },
         ),
@@ -82,6 +88,49 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.only(bottom: 90, left: 24, right: 24),
+      ),
+    );
+  }
+
+  void _restoreNote(NoteModel note) {
+    setState(() {
+      _deletedNotes.removeWhere((n) => n.id == note.id);
+      _notes.insert(0, note);
+    });
+  }
+
+  void _permanentDeleteNote(String id) {
+    setState(() {
+      _deletedNotes.removeWhere((n) => n.id == id);
+    });
+  }
+
+  void _clearTrash() {
+    setState(() {
+      _deletedNotes.clear();
+    });
+  }
+
+  void _openTrashScreen() {
+    if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+      Navigator.of(context).pop();
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TrashScreen(
+          deletedNotes: _deletedNotes,
+          onRestoreNote: _restoreNote,
+          onPermanentDelete: _permanentDeleteNote,
+          onClearAll: _clearTrash,
+        ),
+      ),
+    );
+  }
+
+  void _openSettingsScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const SettingsScreen(),
       ),
     );
   }
@@ -167,7 +216,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             currentUser: _currentUser,
             noteCount: _notes.length,
             notebookCount: _notebooks.length,
+            deletedNotesCount: _deletedNotes.length,
             onOpenAccount: _openAuthScreen,
+            onOpenTrash: _openTrashScreen,
             onLogout: () async {
               await AuthService().signOut();
               setState(() {
@@ -202,6 +253,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     onOpenDrawer: () {
                       _scaffoldKey.currentState?.openDrawer();
                     },
+                    onOpenSettings: _openSettingsScreen,
                   ),
 
                   // Tab 1: Notebooks (Günlük/Ajanda)

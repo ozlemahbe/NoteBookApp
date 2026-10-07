@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/notebook_model.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_theme_config.dart';
 import '../widgets/notebook_cover_widget.dart';
+import '../widgets/themed_background.dart';
 import 'add_notebook_screen.dart';
 
 /// Screen 2: Notebooks (Günlük/Ajanda) matching Sketch 2:
@@ -36,10 +38,11 @@ class NotebooksScreen extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) {
+        final sheetConfig = AppTheme.current;
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          decoration: BoxDecoration(
+            color: sheetConfig.isDark ? const Color(0xFF1E1733) : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
           child: Column(
@@ -69,18 +72,18 @@ class NotebooksScreen extends StatelessWidget {
 
               Text(
                 nb.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: AppTheme.textDark,
+                  color: sheetConfig.textDark,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 '${nb.pageCount} sayfa yazıldı • ${nb.createdAt.day}.${nb.createdAt.month}.${nb.createdAt.year}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: AppTheme.textMuted,
+                  color: sheetConfig.textMuted,
                 ),
               ),
               const SizedBox(height: 20),
@@ -126,7 +129,7 @@ class NotebooksScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        backgroundColor: AppTheme.primaryLavender,
+                        backgroundColor: sheetConfig.primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -143,7 +146,7 @@ class NotebooksScreen extends StatelessWidget {
                                 Text('Defter açıldı (Demo) ♡'),
                               ],
                             ),
-                            backgroundColor: AppTheme.deepLavender,
+                            backgroundColor: sheetConfig.accentColor,
                             behavior: SnackBarBehavior.floating,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -173,7 +176,13 @@ class NotebooksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return ValueListenableBuilder<AppThemeType>(
+      valueListenable: AppTheme.themeNotifier,
+      builder: (context, themeType, _) {
+        final config = ThemeConfig.fromType(themeType);
+
+        return ThemedBackground(
+          child: Stack(
       children: [
         SafeArea(
           bottom: false,
@@ -188,17 +197,17 @@ class NotebooksScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppTheme.pastelPink.withValues(alpha: 0.5),
+                        color: config.activeNavBox,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.auto_stories_rounded,
-                        color: AppTheme.deepLavender,
+                        color: config.primaryColor,
                         size: 20,
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -206,14 +215,14 @@ class NotebooksScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: AppTheme.textDark,
+                            color: config.headerTextColor,
                           ),
                         ),
                         Text(
                           'Özel kapaklı not defterlerin',
                           style: TextStyle(
                             fontSize: 12.5,
-                            color: AppTheme.textMuted,
+                            color: config.headerMutedColor,
                           ),
                         ),
                       ],
@@ -254,11 +263,18 @@ class NotebooksScreen extends StatelessWidget {
           right: 24,
           bottom: 100,
           child: Container(
+            width: 58,
+            height: 58,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: config.fabGradient,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryLavender.withValues(alpha: 0.4),
+                  color: config.fabShadowColor.withValues(alpha: 0.4),
                   blurRadius: 16,
                   spreadRadius: 2,
                   offset: const Offset(0, 6),
@@ -266,28 +282,29 @@ class NotebooksScreen extends StatelessWidget {
               ],
             ),
             child: Material(
-              color: AppTheme.primaryLavender,
+              color: Colors.transparent,
               shape: const CircleBorder(),
               child: InkWell(
                 customBorder: const CircleBorder(),
                 onTap: () => _openAddNotebook(context),
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Icon(
-                    Icons.add_rounded,
-                    size: 30,
-                    color: Colors.white,
-                  ),
+                child: Icon(
+                  Icons.add_rounded,
+                  size: 30,
+                  color: config.fabIconColor,
                 ),
               ),
             ),
           ),
         ),
-      ],
+          ],
+        ),
+      );
+      },
     );
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final config = AppTheme.current;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -295,30 +312,30 @@ class NotebooksScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.pastelPink.withValues(alpha: 0.3),
+              color: config.primaryColor.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.book_outlined,
               size: 44,
-              color: AppTheme.deepLavender,
+              color: config.primaryColor,
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Henüz bir not defteri yok ♡',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppTheme.textDark,
+              color: config.textDark,
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             '+ butonuna basarak ilk kapaklı günlüğünü oluştur',
             style: TextStyle(
               fontSize: 13,
-              color: AppTheme.textMuted,
+              color: config.textMuted,
             ),
           ),
         ],

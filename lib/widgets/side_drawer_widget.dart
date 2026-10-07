@@ -11,7 +11,9 @@ class SideDrawerWidget extends StatelessWidget {
   final UserModel? currentUser;
   final int noteCount;
   final int notebookCount;
+  final int deletedNotesCount;
   final VoidCallback onOpenAccount;
+  final VoidCallback onOpenTrash;
   final VoidCallback onLogout;
 
   const SideDrawerWidget({
@@ -19,7 +21,9 @@ class SideDrawerWidget extends StatelessWidget {
     this.currentUser,
     required this.noteCount,
     required this.notebookCount,
+    this.deletedNotesCount = 0,
     required this.onOpenAccount,
+    required this.onOpenTrash,
     required this.onLogout,
   });
 
@@ -185,7 +189,114 @@ class SideDrawerWidget extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+
+            // "🗑️ Çöp Kutusu" Menu Item
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(18),
+                  onTap: onOpenTrash,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(
+                            0xFF8F7193,
+                          ).withValues(alpha: 0.06),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: const Color(0xFFF4E2E6),
+                        width: 1.2,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFDECEF),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.auto_delete_outlined,
+                            color: Color(0xFFC04B67),
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Çöp Kutusu',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF3F2B32),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                deletedNotesCount > 0
+                                    ? '$deletedNotesCount silinen not'
+                                    : 'Boş ♡',
+                                style: TextStyle(
+                                  fontSize: 12.5,
+                                  fontWeight: FontWeight.w500,
+                                  color: deletedNotesCount > 0
+                                      ? const Color(0xFFC04B67)
+                                      : const Color(0xFF918288),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (deletedNotesCount > 0)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            margin: const EdgeInsets.only(right: 6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFC04B67).withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '$deletedNotesCount',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFFC04B67),
+                              ),
+                            ),
+                          ),
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          color: Color(0xFF918288),
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
 
             // Quick Stats Card (Notlarım & Defterlerim)
             Padding(

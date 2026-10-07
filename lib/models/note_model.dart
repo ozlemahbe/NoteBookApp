@@ -5,6 +5,8 @@ class NoteModel {
   final String id;
   final String title;
   final String content;
+  final String? drawingData;
+  final IconData? customIcon;
   final DateTime date;
   final Color color;
   final bool isPinned;
@@ -13,6 +15,8 @@ class NoteModel {
     required this.id,
     required this.title,
     required this.content,
+    this.drawingData,
+    this.customIcon,
     required this.date,
     required this.color,
     this.isPinned = false,
@@ -22,6 +26,8 @@ class NoteModel {
     String? id,
     String? title,
     String? content,
+    String? drawingData,
+    IconData? customIcon,
     DateTime? date,
     Color? color,
     bool? isPinned,
@@ -30,6 +36,8 @@ class NoteModel {
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
+      drawingData: drawingData ?? this.drawingData,
+      customIcon: customIcon ?? this.customIcon,
       date: date ?? this.date,
       color: color ?? this.color,
       isPinned: isPinned ?? this.isPinned,

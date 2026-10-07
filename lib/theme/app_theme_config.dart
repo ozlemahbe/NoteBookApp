@@ -101,6 +101,21 @@ class ThemeConfig {
     this.headerTag,
   });
 
+  /// The primary header and title text color for outside cards
+  Color get headerTextColor => isDark ? const Color(0xFFF8F4FF) : textDark;
+
+  /// The secondary text color for outside cards
+  Color get headerMutedColor => isDark ? const Color(0xFFC7B8E0) : textMuted;
+
+  /// Background color for settings cards and info panels
+  Color get settingsCardBg => isDark ? const Color(0x351F1836) : Colors.white.withValues(alpha: 0.88);
+
+  /// Border color for settings cards and info panels
+  Color get settingsCardBorder => isDark ? cardBorderColor : cardBorderColor.withValues(alpha: 0.5);
+
+  /// Friendly theme subtitle for theme picker
+  String get subtitle => headerBadge ?? headerSubtitle ?? name;
+
   // -------------------------------------------------------------
   // 1. GÜN BATIMI (Sunset Glow - Image 1)
   // -------------------------------------------------------------
@@ -121,22 +136,22 @@ class ThemeConfig {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0xFFFF8E72), // Warm peach coral top
-        Color(0xFFFFA685),
-        Color(0xFFFFC599),
-        Color(0xFFFFD8B3),
-        Color(0xFFFFE8D6), // Soft warm cream bottom
+        Color(0xFFFFB5C5), // Warm pink top
+        Color(0xFFFFC4A8), // Peach coral
+        Color(0xFFFFD4A8), // Soft apricot
+        Color(0xFFFFE0C0), // Warm vanilla peach
+        Color(0xFFFFEDD8), // Soft cream bottom
       ],
-      stops: [0.0, 0.25, 0.55, 0.8, 1.0],
+      stops: [0.0, 0.25, 0.5, 0.75, 1.0],
     ),
     textDark: const Color(0xFF4A282E),
     textMuted: const Color(0xFF8E6168),
     textHint: const Color(0xFFBFA0A5),
-    primaryColor: const Color(0xFFFF6584),
-    accentColor: const Color(0xFFE24B6A),
+    primaryColor: const Color(0xFFE8607A),
+    accentColor: const Color(0xFFD44D68),
     searchBarBg: const Color(0xFFFFF7F2),
     searchBarBorderColor: Colors.white,
-    searchBarIconColor: const Color(0xFFE06C78),
+    searchBarIconColor: const Color(0xFFD06878),
     searchBarTextColor: const Color(0xFF4A282E),
     searchBarHintColor: const Color(0xFFBFA0A5),
     searchBarTrailingIcon: Icons.wb_sunny_outlined,
@@ -144,10 +159,10 @@ class ThemeConfig {
     cardBorderColor: const Color(0x60FFFFFF),
     cardShadow: [
       BoxShadow(
-        color: const Color(0xFFD66D57).withValues(alpha: 0.12),
-        blurRadius: 16,
+        color: const Color(0xFFD66D57).withValues(alpha: 0.10),
+        blurRadius: 14,
         spreadRadius: 1,
-        offset: const Offset(0, 6),
+        offset: const Offset(0, 5),
       ),
     ],
     notePaperColors: const [
@@ -164,8 +179,8 @@ class ThemeConfig {
     activeNavBorder: const Color(0xFFFF8E9E),
     activeNavIcon: const Color(0xFFC72848),
     inactiveNavIcon: const Color(0xFF9E7780),
-    fabGradient: const [Color(0xFFFF6584), Color(0xFFFF8E72)],
-    fabShadowColor: const Color(0xFFFF6584),
+    fabGradient: const [Color(0xFFE8607A), Color(0xFFFF8E72)],
+    fabShadowColor: const Color(0xFFE8607A),
     fabIconColor: Colors.white,
     headerTitle: 'Bugün harika olacak! ♡',
     headerSubtitle: 'KÜÇÜK NOTLAR\nBÜYÜK HAYALLER ♡',

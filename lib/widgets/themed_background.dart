@@ -75,66 +75,143 @@ class _AtmosphericPainter extends CustomPainter {
 
   // --- 1. Sunset Atmosphere (Image 1) ---
   void _drawSunsetAtmosphere(Canvas canvas, Size size) {
-    // 1. Soft glowing sun in top-center
-    final sunCenter = Offset(size.width * 0.52, size.height * 0.17);
+    // 1. Soft warm glow in top-center area
+    final sunCenter = Offset(size.width * 0.5, size.height * 0.12);
     final sunPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          const Color(0xFFFFF1C5).withValues(alpha: 0.95),
-          const Color(0xFFFFD59E).withValues(alpha: 0.6),
-          const Color(0xFFFFB088).withValues(alpha: 0.0),
+          const Color(0xFFFFF1C5).withValues(alpha: 0.65),
+          const Color(0xFFFFD59E).withValues(alpha: 0.35),
+          const Color(0xFFFFB5C5).withValues(alpha: 0.0),
         ],
-      ).createShader(Rect.fromCircle(center: sunCenter, radius: 85));
-    canvas.drawCircle(sunCenter, 85, sunPaint);
+      ).createShader(Rect.fromCircle(center: sunCenter, radius: 120));
+    canvas.drawCircle(sunCenter, 120, sunPaint);
 
-    // 2. Rolling hills at bottom
+    // 2. Rolling hills at bottom - Layer 1 (furthest, light coral)
     final hillPaint1 = Paint()
-      ..color = const Color(0xFFC95B72).withValues(alpha: 0.22)
-      ..style = PaintingStyle.fill;
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xFFFFB088).withValues(alpha: 0.45),
+          const Color(0xFFFF9E80).withValues(alpha: 0.55),
+        ],
+      ).createShader(Rect.fromLTWH(0, size.height * 0.80, size.width, size.height * 0.20));
     final path1 = Path();
     path1.moveTo(0, size.height * 0.88);
     path1.quadraticBezierTo(
-      size.width * 0.25,
-      size.height * 0.84,
-      size.width * 0.55,
-      size.height * 0.87,
+      size.width * 0.2, size.height * 0.83,
+      size.width * 0.45, size.height * 0.86,
     );
     path1.quadraticBezierTo(
-      size.width * 0.8,
-      size.height * 0.89,
-      size.width,
-      size.height * 0.85,
+      size.width * 0.7, size.height * 0.89,
+      size.width, size.height * 0.84,
     );
     path1.lineTo(size.width, size.height);
     path1.lineTo(0, size.height);
     path1.close();
     canvas.drawPath(path1, hillPaint1);
 
+    // Rolling hills - Layer 2 (closer, warm coral-pink)
     final hillPaint2 = Paint()
-      ..color = const Color(0xFF883850).withValues(alpha: 0.28)
-      ..style = PaintingStyle.fill;
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xFFE88070).withValues(alpha: 0.50),
+          const Color(0xFFD06860).withValues(alpha: 0.60),
+        ],
+      ).createShader(Rect.fromLTWH(0, size.height * 0.85, size.width, size.height * 0.15));
     final path2 = Path();
     path2.moveTo(0, size.height * 0.92);
     path2.quadraticBezierTo(
-      size.width * 0.4,
-      size.height * 0.94,
-      size.width * 0.7,
-      size.height * 0.91,
+      size.width * 0.35, size.height * 0.88,
+      size.width * 0.6, size.height * 0.91,
     );
     path2.quadraticBezierTo(
-      size.width * 0.85,
-      size.height * 0.89,
-      size.width,
-      size.height * 0.93,
+      size.width * 0.85, size.height * 0.93,
+      size.width, size.height * 0.89,
     );
     path2.lineTo(size.width, size.height);
     path2.lineTo(0, size.height);
     path2.close();
     canvas.drawPath(path2, hillPaint2);
 
-    // 3. Tiny cute flying birds
-    _drawBird(canvas, Offset(size.width * 0.65, size.height * 0.14), 10);
-    _drawBird(canvas, Offset(size.width * 0.68, size.height * 0.16), 7);
+    // Rolling hills - Layer 3 (closest, warm purple-mauve)
+    final hillPaint3 = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xFFC06080).withValues(alpha: 0.45),
+          const Color(0xFFB05070).withValues(alpha: 0.55),
+        ],
+      ).createShader(Rect.fromLTWH(0, size.height * 0.90, size.width, size.height * 0.10));
+    final path3 = Path();
+    path3.moveTo(0, size.height * 0.95);
+    path3.quadraticBezierTo(
+      size.width * 0.25, size.height * 0.92,
+      size.width * 0.5, size.height * 0.95,
+    );
+    path3.quadraticBezierTo(
+      size.width * 0.75, size.height * 0.97,
+      size.width, size.height * 0.94,
+    );
+    path3.lineTo(size.width, size.height);
+    path3.lineTo(0, size.height);
+    path3.close();
+    canvas.drawPath(path3, hillPaint3);
+
+    // 3. Plant/leaf silhouettes on the hills (right side)
+    final plantPaint = Paint()
+      ..color = const Color(0xFFA04860).withValues(alpha: 0.45)
+      ..style = PaintingStyle.fill;
+
+    // Tall plant right side
+    _drawPlantStem(canvas, Offset(size.width * 0.88, size.height * 0.90), size.height * 0.08, plantPaint);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.88, size.height * 0.85), 0.4, 12, plantPaint);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.88, size.height * 0.87), -0.5, 10, plantPaint);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.88, size.height * 0.83), 0.6, 14, plantPaint);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.88, size.height * 0.89), -0.3, 8, plantPaint);
+
+    // Small plant right corner
+    _drawPlantStem(canvas, Offset(size.width * 0.95, size.height * 0.92), size.height * 0.05, plantPaint);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.95, size.height * 0.89), 0.5, 9, plantPaint);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.95, size.height * 0.87), -0.4, 11, plantPaint);
+
+    // Small plant left side
+    final plantPaint2 = Paint()
+      ..color = const Color(0xFFA04860).withValues(alpha: 0.30)
+      ..style = PaintingStyle.fill;
+    _drawPlantStem(canvas, Offset(size.width * 0.08, size.height * 0.93), size.height * 0.04, plantPaint2);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.08, size.height * 0.91), -0.5, 8, plantPaint2);
+    _drawPlantLeaf(canvas, Offset(size.width * 0.08, size.height * 0.89), 0.4, 10, plantPaint2);
+
+    // 4. Tiny cute flying birds
+    _drawBird(canvas, Offset(size.width * 0.62, size.height * 0.10), 10);
+    _drawBird(canvas, Offset(size.width * 0.68, size.height * 0.12), 7);
+    _drawBird(canvas, Offset(size.width * 0.55, size.height * 0.14), 8);
+  }
+
+  void _drawPlantStem(Canvas canvas, Offset base, double height, Paint paint) {
+    final stemPaint = Paint()
+      ..color = paint.color
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(base, Offset(base.dx, base.dy - height), stemPaint);
+  }
+
+  void _drawPlantLeaf(Canvas canvas, Offset center, double angle, double leafSize, Paint paint) {
+    canvas.save();
+    canvas.translate(center.dx, center.dy);
+    canvas.rotate(angle);
+    final leaf = Path();
+    leaf.moveTo(0, -leafSize);
+    leaf.quadraticBezierTo(leafSize * 0.5, -leafSize * 0.3, 0, leafSize * 0.2);
+    leaf.quadraticBezierTo(-leafSize * 0.5, -leafSize * 0.3, 0, -leafSize);
+    canvas.drawPath(leaf, paint);
+    canvas.restore();
   }
 
   void _drawBird(Canvas canvas, Offset pos, double s) {

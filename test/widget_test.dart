@@ -8,14 +8,14 @@ void main() {
     await tester.pumpWidget(const SweetieNotesApp());
     await tester.pump();
 
-    // Verify search bar placeholder "Ara" is present
-    expect(find.text('Ara'), findsOneWidget);
+    // Verify search bar placeholder "Ara..." is present
+    expect(find.text('Ara...'), findsOneWidget);
 
     // Verify mock note titles are present
     expect(find.textContaining('Alışveriş Listesi'), findsOneWidget);
   });
 
-  testWidgets('Open side drawer and navigate to Pastel Defter auth screen',
+  testWidgets('Open side drawer and verify Hesap and Çöp Kutusu',
       (WidgetTester tester) async {
     await tester.pumpWidget(const SweetieNotesApp());
     await tester.pump();
@@ -26,20 +26,31 @@ void main() {
     await tester.tap(menuIcon);
     await tester.pumpAndSettle();
 
-    // Verify Side Drawer opened with "Hesap" option
+    // Verify Side Drawer opened with "Hesap" and "Çöp Kutusu" options
     expect(find.text('Hesap'), findsOneWidget);
-    expect(find.text('Pastel Defter'), findsOneWidget);
+    expect(find.text('Çöp Kutusu'), findsOneWidget);
 
-    // Tap on "Hesap"
-    await tester.tap(find.text('Hesap'));
+    // Tap on "Çöp Kutusu"
+    await tester.tap(find.text('Çöp Kutusu'));
     await tester.pumpAndSettle();
 
-    // Verify AuthScreen (Pastel Defter) is displayed
-    expect(find.text('Pastel Defter'), findsOneWidget);
-    expect(find.text('Notların ve defterlerin hesabında saklanır, hiçbir şey kaybolmaz.'), findsOneWidget);
-    expect(find.text('Giriş yap'), findsWidgets);
-    expect(find.text('Kayıt ol'), findsOneWidget);
-    expect(find.text('E-posta'), findsOneWidget);
-    expect(find.text('Şifre'), findsOneWidget);
+    // Verify TrashScreen is displayed
+    expect(find.text('Çöp kutusu boş ♡'), findsOneWidget);
+  });
+
+  testWidgets('Tap settings icon in top right opens SettingsScreen',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const SweetieNotesApp());
+    await tester.pump();
+
+    // Tap settings icon in the top right of the search bar
+    final settingsIcon = find.byKey(const Key('search_bar_settings_button'));
+    expect(settingsIcon, findsOneWidget);
+    await tester.tap(settingsIcon);
+    await tester.pumpAndSettle();
+
+    // Verify SettingsScreen opened
+    expect(find.text('Ayarlar'), findsWidgets);
+    expect(find.text('Görünüm ve tercihlerin'), findsOneWidget);
   });
 }

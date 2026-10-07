@@ -11,6 +11,7 @@ class SearchBarWidget extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final VoidCallback? onClear;
   final VoidCallback? onMenuTap;
+  final VoidCallback? onSettingsTap;
   final String hintText;
 
   const SearchBarWidget({
@@ -19,6 +20,7 @@ class SearchBarWidget extends StatelessWidget {
     required this.onChanged,
     this.onClear,
     this.onMenuTap,
+    this.onSettingsTap,
     this.hintText = 'Ara...',
   });
 
@@ -34,10 +36,7 @@ class SearchBarWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: config.searchBarBg,
             borderRadius: AppTheme.borderPill,
-            border: Border.all(
-              color: config.searchBarBorderColor,
-              width: 1.2,
-            ),
+            border: Border.all(color: config.searchBarBorderColor, width: 1.2),
             boxShadow: [
               BoxShadow(
                 color: config.isDark
@@ -96,8 +95,11 @@ class SearchBarWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              suffixIcon: controller.text.isNotEmpty
-                  ? IconButton(
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (controller.text.isNotEmpty)
+                    IconButton(
                       icon: Icon(
                         Icons.close_rounded,
                         color: config.searchBarHintColor,
@@ -108,15 +110,28 @@ class SearchBarWidget extends StatelessWidget {
                         onChanged('');
                         if (onClear != null) onClear!();
                       },
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(right: 14),
-                      child: Icon(
-                        config.searchBarTrailingIcon,
-                        color: config.searchBarIconColor.withValues(alpha: 0.75),
-                        size: 20,
+                    ),
+                  Tooltip(
+                    message: 'Ayarlar',
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        key: const Key('search_bar_settings_button'),
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: onSettingsTap,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12, left: 4),
+                          child: Icon(
+                            Icons.settings_outlined,
+                            color: config.searchBarIconColor,
+                            size: 21,
+                          ),
+                        ),
                       ),
                     ),
+                  ),
+                ],
+              ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             ),

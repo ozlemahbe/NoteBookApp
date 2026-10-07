@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_theme_config.dart';
+import '../widgets/themed_background.dart';
 
 /// Screen 4: Settings with visual theme gallery matching the user's reference designs:
 /// - Allows switching between 5 aesthetic themes (Sunset, Cosmic, Botanical, Sakura, Neon) + Classic Pastel
@@ -357,7 +358,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context, themeType, _) {
         final config = ThemeConfig.fromType(themeType);
 
-        return SafeArea(
+        return ThemedBackground(
+          child: SafeArea(
           bottom: false,
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 110),
@@ -367,6 +369,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 padding: const EdgeInsets.only(bottom: 20, left: 4),
                 child: Row(
                   children: [
+                    if (Navigator.canPop(context))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: config.isDark
+                                    ? Colors.white.withValues(alpha: 0.08)
+                                    : Colors.white.withValues(alpha: 0.8),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: config.cardBorderColor.withValues(alpha: 0.4),
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                size: 18,
+                                color: config.headerTextColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -388,14 +418,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: config.textDark,
+                            color: config.headerTextColor,
                           ),
                         ),
                         Text(
                           'Görünüm ve tercihlerin',
                           style: TextStyle(
                             fontSize: 12.5,
-                            color: config.textMuted,
+                            color: config.headerMutedColor,
                           ),
                         ),
                       ],
@@ -548,6 +578,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
+        ),
         );
       },
     );
