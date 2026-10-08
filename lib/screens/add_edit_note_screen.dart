@@ -42,6 +42,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   bool _isItalic = false;
   bool _isUnderline = false;
   bool _isStrikethrough = false;
+  TextAlign _currentTextAlign = TextAlign.left;
   double _currentFontSize = 16;
   Color? _currentHighlightColor;
   String? _drawingData;
@@ -179,6 +180,55 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
 
     _contentFocusNode.requestFocus();
   }
+
+  void _setAlignment(TextAlign align) {
+    setState(() => _currentTextAlign = align);
+  }
+
+  void _insertTextAtCursor(String textToInsert) {
+    final text = _contentController.text;
+    final selection = _contentController.selection;
+    if (selection.baseOffset < 0) return;
+
+    final cursorPos = selection.baseOffset;
+    
+    // Find the start of the current line
+    int lineStart = text.lastIndexOf('\n', cursorPos - 1);
+    lineStart = lineStart == -1 ? 0 : lineStart + 1;
+    
+    _contentController.text = text.substring(0, lineStart) + textToInsert + text.substring(lineStart);
+    _contentController.selection = TextSelection.collapsed(offset: cursorPos + textToInsert.length);
+    _contentFocusNode.requestFocus();
+  }
+
+  void _insertBulletList() => _insertTextAtCursor('• ');
+
+  void _insertNumberedList() => _insertTextAtCursor('1. ');
+
+  void _decreaseIndent() {
+    final text = _contentController.text;
+    final selection = _contentController.selection;
+    if (selection.baseOffset < 0) return;
+
+    final cursorPos = selection.baseOffset;
+    int lineStart = text.lastIndexOf('\n', cursorPos - 1);
+    lineStart = lineStart == -1 ? 0 : lineStart + 1;
+    
+    int lineEnd = text.indexOf('\n', lineStart);
+    if (lineEnd == -1) lineEnd = text.length;
+
+    final currentLine = text.substring(lineStart, lineEnd);
+    
+    if (currentLine.startsWith('    ')) {
+      _contentController.text = text.substring(0, lineStart) + currentLine.substring(4) + text.substring(lineEnd);
+      _contentController.selection = TextSelection.collapsed(offset: (cursorPos - 4).clamp(0, text.length));
+    } else if (currentLine.startsWith('\t')) {
+      _contentController.text = text.substring(0, lineStart) + currentLine.substring(1) + text.substring(lineEnd);
+      _contentController.selection = TextSelection.collapsed(offset: (cursorPos - 1).clamp(0, text.length));
+    }
+  }
+
+  void _increaseIndent() => _insertTextAtCursor('    ');
 
   void _toggleTextFormat(String type) {
     switch (type) {
@@ -535,6 +585,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                 focusNode: _contentFocusNode,
                                 maxLines: null,
                                 expands: true,
+                                textAlign: _currentTextAlign,
                                 style: _buildContentTextStyle(),
                                 onTap: _handleTextTap,
                                 decoration: const InputDecoration(
@@ -597,6 +648,14 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                     onHighlightColorSelected: _setHighlightColor,
                     onFontSizeSelected: _setFontSize,
                     onIconSelected: (icon) => setState(() => _selectedIcon = icon),
+                    onBulletListTap: _insertBulletList,
+                    onNumberedListTap: _insertNumberedList,
+                    onAlignLeftTap: () => _setAlignment(TextAlign.left),
+                    onAlignCenterTap: () => _setAlignment(TextAlign.center),
+                    onAlignRightTap: () => _setAlignment(TextAlign.right),
+                    onDecreaseIndentTap: _decreaseIndent,
+                    onIncreaseIndentTap: _increaseIndent,
+                    currentTextAlign: _currentTextAlign,
                     onUndoTap: _undo,
                     onRedoTap: _redo,
                     canUndo: _undoStack.isNotEmpty,

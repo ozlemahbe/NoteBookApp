@@ -16,6 +16,14 @@ class NoteEditorToolbar extends StatefulWidget {
   final Function(IconData?) onIconSelected;
   final VoidCallback onUndoTap;
   final VoidCallback onRedoTap;
+  final VoidCallback? onBulletListTap;
+  final VoidCallback? onNumberedListTap;
+  final VoidCallback? onAlignLeftTap;
+  final VoidCallback? onAlignCenterTap;
+  final VoidCallback? onAlignRightTap;
+  final VoidCallback? onDecreaseIndentTap;
+  final VoidCallback? onIncreaseIndentTap;
+  final TextAlign currentTextAlign;
   final bool canUndo;
   final bool canRedo;
   final bool isBold;
@@ -39,6 +47,14 @@ class NoteEditorToolbar extends StatefulWidget {
     required this.onIconSelected,
     required this.onUndoTap,
     required this.onRedoTap,
+    this.onBulletListTap,
+    this.onNumberedListTap,
+    this.onAlignLeftTap,
+    this.onAlignCenterTap,
+    this.onAlignRightTap,
+    this.onDecreaseIndentTap,
+    this.onIncreaseIndentTap,
+    this.currentTextAlign = TextAlign.left,
     this.canUndo = false,
     this.canRedo = false,
     this.isBold = false,
@@ -150,40 +166,237 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
   Widget _buildTextOptionsPanel() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: _panelDecoration(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildFormatButton(
-            label: 'K',
-            isActive: widget.isBold,
-            onTap: widget.onBoldTap,
-            fontWeight: FontWeight.w900,
-            tooltip: 'Kalın',
-          ),
-          _buildFormatButton(
-            label: 'İ',
-            isActive: widget.isItalic,
-            onTap: widget.onItalicTap,
-            isItalicStyle: true,
-            tooltip: 'İtalik',
-          ),
-          _buildFormatButton(
-            label: 'A',
-            isActive: widget.isUnderline,
-            onTap: widget.onUnderlineTap,
-            hasUnderline: true,
-            tooltip: 'Altı Çizili',
-          ),
-          _buildFormatButton(
-            label: 'S',
-            isActive: widget.isStrikethrough,
-            onTap: widget.onStrikethroughTap,
-            hasStrikethrough: true,
-            tooltip: 'Üstü Çizili',
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF252525), // Dark background matching the photo
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Metin seçenekleri',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              GestureDetector(
+                onTap: _toggleTextOptions,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Row 1: Lists & Alignment
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF3A3A3A),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    _buildOptionIcon(
+                      Icons.format_list_bulleted_rounded,
+                      false,
+                      onTap: widget.onBulletListTap,
+                    ),
+                    _buildOptionIcon(
+                      Icons.format_list_numbered_rounded,
+                      false,
+                      onTap: widget.onNumberedListTap,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF3A3A3A),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildOptionIcon(
+                        Icons.format_align_left_rounded,
+                        widget.currentTextAlign == TextAlign.left,
+                        onTap: widget.onAlignLeftTap,
+                      ),
+                      _buildOptionIcon(
+                        Icons.format_align_center_rounded,
+                        widget.currentTextAlign == TextAlign.center,
+                        onTap: widget.onAlignCenterTap,
+                      ),
+                      _buildOptionIcon(
+                        Icons.format_align_right_rounded,
+                        widget.currentTextAlign == TextAlign.right,
+                        onTap: widget.onAlignRightTap,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Row 2: Formatting & Indents
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF3A3A3A),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    _buildFormatIconText(
+                      'B',
+                      widget.isBold,
+                      widget.onBoldTap,
+                      FontWeight.w900,
+                      false,
+                      false,
+                      false,
+                    ),
+                    _buildFormatIconText(
+                      'I',
+                      widget.isItalic,
+                      widget.onItalicTap,
+                      FontWeight.normal,
+                      true,
+                      false,
+                      false,
+                    ),
+                    _buildFormatIconText(
+                      'U',
+                      widget.isUnderline,
+                      widget.onUnderlineTap,
+                      FontWeight.normal,
+                      false,
+                      true,
+                      false,
+                    ),
+                    _buildFormatIconText(
+                      'A',
+                      widget.isStrikethrough,
+                      widget.onStrikethroughTap,
+                      FontWeight.normal,
+                      false,
+                      false,
+                      true,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF3A3A3A),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildOptionIcon(
+                        Icons.format_indent_decrease_rounded,
+                        false,
+                        onTap: widget.onDecreaseIndentTap,
+                      ),
+                      _buildOptionIcon(
+                        Icons.format_indent_increase_rounded,
+                        false,
+                        onTap: widget.onIncreaseIndentTap,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionIcon(IconData icon, bool isActive, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: isActive
+              ? Colors.white.withValues(alpha: 0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: Colors.white, size: 22),
+      ),
+    );
+  }
+
+  Widget _buildFormatIconText(
+    String text,
+    bool isActive,
+    VoidCallback onTap,
+    FontWeight weight,
+    bool isItalic,
+    bool isUnderline,
+    bool isStrikethrough,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        decoration: BoxDecoration(
+          color: isActive
+              ? Colors.white.withValues(alpha: 0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: weight,
+            fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
+            decoration: isUnderline
+                ? TextDecoration.underline
+                : isStrikethrough
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
+            decorationColor: Colors.white,
+            decorationThickness: 2,
+          ),
+        ),
       ),
     );
   }
@@ -427,7 +640,34 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
 
           // Text formatting
           _buildToolbarItem(
-            icon: Icons.text_format_rounded,
+            customChild: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'A',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    height: 1.0,
+                    color: _showTextOptions
+                        ? AppTheme.deepLavender
+                        : AppTheme.textMuted,
+                  ),
+                ),
+                const SizedBox(height: 1),
+                Container(
+                  width: 12,
+                  height: 2.5,
+                  decoration: BoxDecoration(
+                    color: _showTextOptions
+                        ? AppTheme.deepLavender
+                        : AppTheme.textMuted,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ],
+            ),
             isActive: _showTextOptions,
             onTap: _toggleTextOptions,
             tooltip: 'Metin Seçenekleri',
