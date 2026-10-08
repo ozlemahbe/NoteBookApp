@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/note_model.dart';
 import '../theme/app_theme.dart';
 import '../widgets/note_editor_toolbar.dart';
-import '../widgets/drawing_canvas.dart';
 
 /// Screen 3: Add/Edit Note Screen
 /// Features:
@@ -33,7 +32,6 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   bool _hasSaved = false;
 
   // Toolbar state
-  bool _showDrawingCanvas = false;
   bool _isBold = false;
   bool _isItalic = false;
   bool _isUnderline = false;
@@ -336,11 +334,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     final content = _contentController.text.trim();
 
     // If all empty and isNew, don't create an empty note
-    final hasDrawing =
-        _drawingData != null &&
-        _drawingData!.isNotEmpty &&
-        _drawingData != '[]';
-    if (title.isEmpty && content.isEmpty && !hasDrawing && widget.isNew) {
+    if (title.isEmpty && content.isEmpty && widget.isNew) {
       Navigator.of(context).pop();
       return;
     }
@@ -406,10 +400,6 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (_showDrawingCanvas) {
-          setState(() => _showDrawingCanvas = false);
-          return;
-        }
         _saveAndPop();
       },
       child: Hero(
@@ -437,11 +427,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                   icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
                   color: AppTheme.textDark,
                   onPressed: () {
-                    if (_showDrawingCanvas) {
-                      setState(() => _showDrawingCanvas = false);
-                    } else {
-                      _saveAndPop();
-                    }
+                    _saveAndPop();
                   },
                 ),
               ),
@@ -482,6 +468,61 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           body: SafeArea(
             child: Column(
               children: [
+                // Color palette row
+                Container(
+                  height: 48,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 6,
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: AppTheme.noteColors.map((color) {
+                      final isSelected = _selectedColor == color;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedColor = color;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppTheme.deepLavender
+                                  : Colors.white,
+                              width: isSelected ? 2.5 : 1.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.06),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: isSelected
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  size: 16,
+                                  color: AppTheme.deepLavender,
+                                )
+                              : null,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+
                 // Note Content Area
                 Expanded(
                   child: Stack(
@@ -584,48 +625,12 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                           ],
                         ),
                       ),
-
-                      // Display saved drawing when not actively drawing
-                      if (_drawingData != null &&
-                          _drawingData!.isNotEmpty &&
-                          !_showDrawingCanvas)
-                        Positioned.fill(
-                          child: IgnorePointer(
-                            child: CustomPaint(
-                              painter: DrawingPainter(
-                                strokes: DrawingStroke.deserializeStrokes(
-                                  _drawingData!,
-                                ),
-                              ),
-                              size: Size.infinite,
-                            ),
-                          ),
-                        ),
-
-                      // Drawing canvas overlay
-                      if (_showDrawingCanvas)
-                        Positioned.fill(
-                          child: DrawingCanvas(
-                            initialData: _drawingData,
-                            onUpdate: (data) {
-                              _drawingData = data;
-                            },
-                            onClose: (data) => setState(() {
-                              _drawingData = data;
-                              _showDrawingCanvas = false;
-                            }),
-                            noteColor: _selectedColor,
-                          ),
-                        ),
                     ],
                   ),
                 ),
 
                 // Bottom Editor Toolbar
-                if (!_showDrawingCanvas)
-                  NoteEditorToolbar(
-                    onDrawingTap: () =>
-                        setState(() => _showDrawingCanvas = true),
+                NoteEditorToolbar(
                     onChecklistTap: _insertChecklist,
                     onBoldTap: () => _toggleTextFormat('bold'),
                     onItalicTap: () => _toggleTextFormat('italic'),

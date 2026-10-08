@@ -40,7 +40,7 @@ class FloatingBottomBar extends StatelessWidget {
     NavItem(
       icon: Icons.auto_stories_outlined,
       activeIcon: Icons.auto_stories_rounded,
-      label: 'Notlar',
+      label: 'Defterler',
     ),
     NavItem(
       icon: Icons.settings_outlined,
@@ -72,16 +72,15 @@ class FloatingBottomBar extends StatelessWidget {
                 offset: const Offset(0, 6),
               ),
               BoxShadow(
-                color: Colors.black.withValues(alpha: config.isDark ? 0.4 : 0.04),
+                color: Colors.black.withValues(
+                  alpha: config.isDark ? 0.4 : 0.04,
+                ),
                 blurRadius: 10,
                 spreadRadius: 1,
                 offset: const Offset(0, 2),
               ),
             ],
-            border: Border.all(
-              color: config.navBarBorderColor,
-              width: 1.4,
-            ),
+            border: Border.all(color: config.navBarBorderColor, width: 1.4),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(26),
@@ -119,7 +118,9 @@ class FloatingBottomBar extends StatelessWidget {
                           boxShadow: isSelected && config.isDark
                               ? [
                                   BoxShadow(
-                                    color: config.primaryColor.withValues(alpha: 0.4),
+                                    color: config.primaryColor.withValues(
+                                      alpha: 0.4,
+                                    ),
                                     blurRadius: 10,
                                     spreadRadius: 1,
                                   ),

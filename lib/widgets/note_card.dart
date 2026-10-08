@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/note_model.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_theme_config.dart';
-import '../widgets/drawing_canvas.dart';
 
 /// Floating note card with theme-specific aesthetics:
 /// - Antigravity soft box shadow or neon glow
@@ -272,24 +271,6 @@ class NoteCard extends StatelessWidget {
                         ),
                       ),
 
-                      // Drawing preview overlay
-                      if (note.drawingData != null &&
-                          note.drawingData!.isNotEmpty)
-                        Positioned.fill(
-                          child: IgnorePointer(
-                            child: Opacity(
-                              opacity: 0.5,
-                              child: CustomPaint(
-                                painter: DrawingPainter(
-                                  strokes: DrawingStroke.deserializeStrokes(
-                                    note.drawingData!,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
                       // Main Note Content
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -305,11 +286,16 @@ class NoteCard extends StatelessWidget {
                               children: [
                                 if (note.customIcon != null)
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 6, top: 1),
+                                    padding: const EdgeInsets.only(
+                                      right: 6,
+                                      top: 1,
+                                    ),
                                     child: Icon(
                                       note.customIcon,
                                       size: 16,
-                                      color: config.textDark.withValues(alpha: 0.85),
+                                      color: config.textDark.withValues(
+                                        alpha: 0.85,
+                                      ),
                                     ),
                                   ),
                                 Expanded(

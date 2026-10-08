@@ -5,7 +5,6 @@ import '../theme/app_theme.dart';
 /// Provides: Drawing, Checklist, Text formatting, Background highlight,
 /// Font size, and Undo/Redo actions.
 class NoteEditorToolbar extends StatefulWidget {
-  final VoidCallback onDrawingTap;
   final VoidCallback onChecklistTap;
   final VoidCallback onBoldTap;
   final VoidCallback onItalicTap;
@@ -36,7 +35,6 @@ class NoteEditorToolbar extends StatefulWidget {
 
   const NoteEditorToolbar({
     super.key,
-    required this.onDrawingTap,
     required this.onChecklistTap,
     required this.onBoldTap,
     required this.onItalicTap,
@@ -610,16 +608,6 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Drawing tool
-          _buildToolbarItem(
-            icon: Icons.draw_rounded,
-            isActive: false,
-            onTap: widget.onDrawingTap,
-            tooltip: 'Çizim',
-          ),
-
-          _buildDivider(),
-
           // Checklist / Task toggle
           _buildToolbarItem(
             icon: Icons.check_box,
@@ -781,64 +769,6 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
     );
   }
 
-  Widget _buildFormatButton({
-    required String label,
-    required bool isActive,
-    required VoidCallback onTap,
-    FontWeight fontWeight = FontWeight.w600,
-    bool isItalicStyle = false,
-    bool hasUnderline = false,
-    bool hasStrikethrough = false,
-    String tooltip = '',
-  }) {
-    return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 48,
-            height: 42,
-            decoration: BoxDecoration(
-              color: isActive
-                  ? AppTheme.primaryLavender.withValues(alpha: 0.25)
-                  : Colors.grey.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isActive
-                    ? AppTheme.deepLavender.withValues(alpha: 0.4)
-                    : Colors.transparent,
-              ),
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: fontWeight,
-                  fontStyle: isItalicStyle
-                      ? FontStyle.italic
-                      : FontStyle.normal,
-                  color: isActive ? AppTheme.deepLavender : AppTheme.textMuted,
-                  decoration: hasUnderline
-                      ? TextDecoration.underline
-                      : hasStrikethrough
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
-                  decorationColor: isActive
-                      ? AppTheme.deepLavender
-                      : AppTheme.textMuted,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildDivider() {
     return Container(
