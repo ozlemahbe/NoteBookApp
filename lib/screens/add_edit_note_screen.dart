@@ -17,11 +17,7 @@ class AddEditNoteScreen extends StatefulWidget {
   final NoteModel? note;
   final bool isNew;
 
-  const AddEditNoteScreen({
-    super.key,
-    this.note,
-    this.isNew = false,
-  });
+  const AddEditNoteScreen({super.key, this.note, this.isNew = false});
 
   @override
   State<AddEditNoteScreen> createState() => _AddEditNoteScreenState();
@@ -64,8 +60,9 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     _noteId =
         widget.note?.id ?? DateTime.now().millisecondsSinceEpoch.toString();
     _titleController = TextEditingController(text: widget.note?.title ?? '');
-    _contentController =
-        TextEditingController(text: widget.note?.content ?? '');
+    _contentController = TextEditingController(
+      text: widget.note?.content ?? '',
+    );
     _selectedColor = widget.note?.color ?? AppTheme.noteColors[0];
     _noteDate = widget.note?.date ?? DateTime.now();
     _isPinned = widget.note?.isPinned ?? false;
@@ -85,10 +82,12 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     final lines = content.split('\n');
     for (final line in lines) {
       if (line.startsWith('☑ ') || line.startsWith('☐ ')) {
-        _checklistItems.add(ChecklistItem(
-          text: line.substring(2),
-          isCompleted: line.startsWith('☑ '),
-        ));
+        _checklistItems.add(
+          ChecklistItem(
+            text: line.substring(2),
+            isCompleted: line.startsWith('☑ '),
+          ),
+        );
       }
     }
   }
@@ -97,10 +96,12 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     if (_isUndoRedoAction) return;
     final currentText = _contentController.text;
     if (currentText != _lastSavedText) {
-      _undoStack.add(_TextSnapshot(
-        text: _lastSavedText,
-        cursorPosition: _contentController.selection.baseOffset,
-      ));
+      _undoStack.add(
+        _TextSnapshot(
+          text: _lastSavedText,
+          cursorPosition: _contentController.selection.baseOffset,
+        ),
+      );
       _redoStack.clear();
       _lastSavedText = currentText;
       // Keep stack manageable
@@ -113,10 +114,12 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     if (_undoStack.isEmpty) return;
     _isUndoRedoAction = true;
     final snapshot = _undoStack.removeLast();
-    _redoStack.add(_TextSnapshot(
-      text: _contentController.text,
-      cursorPosition: _contentController.selection.baseOffset,
-    ));
+    _redoStack.add(
+      _TextSnapshot(
+        text: _contentController.text,
+        cursorPosition: _contentController.selection.baseOffset,
+      ),
+    );
     _contentController.text = snapshot.text;
     _lastSavedText = snapshot.text;
     // Restore cursor
@@ -130,10 +133,12 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     if (_redoStack.isEmpty) return;
     _isUndoRedoAction = true;
     final snapshot = _redoStack.removeLast();
-    _undoStack.add(_TextSnapshot(
-      text: _contentController.text,
-      cursorPosition: _contentController.selection.baseOffset,
-    ));
+    _undoStack.add(
+      _TextSnapshot(
+        text: _contentController.text,
+        cursorPosition: _contentController.selection.baseOffset,
+      ),
+    );
     _contentController.text = snapshot.text;
     _lastSavedText = snapshot.text;
     final pos = snapshot.cursorPosition.clamp(0, snapshot.text.length);
@@ -148,21 +153,24 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     if (selection.baseOffset < 0) return; // No selection
 
     final cursorPos = selection.baseOffset;
-    
+
     // Find the start and end of the current line
     int lineStart = text.lastIndexOf('\n', cursorPos - 1);
     lineStart = lineStart == -1 ? 0 : lineStart + 1;
-    
+
     int lineEnd = text.indexOf('\n', cursorPos);
     lineEnd = lineEnd == -1 ? text.length : lineEnd;
-    
+
     final currentLine = text.substring(lineStart, lineEnd);
-    
+
     if (currentLine.startsWith('☐ ') || currentLine.startsWith('☑ ')) {
       // Remove it if it already has one
       final newLine = currentLine.substring(2);
-      _contentController.text = text.substring(0, lineStart) + newLine + text.substring(lineEnd);
-      _contentController.selection = TextSelection.collapsed(offset: (cursorPos - 2).clamp(0, _contentController.text.length));
+      _contentController.text =
+          text.substring(0, lineStart) + newLine + text.substring(lineEnd);
+      _contentController.selection = TextSelection.collapsed(
+        offset: (cursorPos - 2).clamp(0, _contentController.text.length),
+      );
     } else {
       // Insert new
       String prefix = '';
@@ -170,9 +178,8 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
         prefix = '\n';
       }
       final checkItem = '$prefix☐ ';
-      _contentController.text = text.substring(0, cursorPos) +
-          checkItem +
-          text.substring(cursorPos);
+      _contentController.text =
+          text.substring(0, cursorPos) + checkItem + text.substring(cursorPos);
       _contentController.selection = TextSelection.collapsed(
         offset: cursorPos + checkItem.length,
       );
@@ -191,13 +198,16 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     if (selection.baseOffset < 0) return;
 
     final cursorPos = selection.baseOffset;
-    
+
     // Find the start of the current line
     int lineStart = text.lastIndexOf('\n', cursorPos - 1);
     lineStart = lineStart == -1 ? 0 : lineStart + 1;
-    
-    _contentController.text = text.substring(0, lineStart) + textToInsert + text.substring(lineStart);
-    _contentController.selection = TextSelection.collapsed(offset: cursorPos + textToInsert.length);
+
+    _contentController.text =
+        text.substring(0, lineStart) + textToInsert + text.substring(lineStart);
+    _contentController.selection = TextSelection.collapsed(
+      offset: cursorPos + textToInsert.length,
+    );
     _contentFocusNode.requestFocus();
   }
 
@@ -213,18 +223,28 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     final cursorPos = selection.baseOffset;
     int lineStart = text.lastIndexOf('\n', cursorPos - 1);
     lineStart = lineStart == -1 ? 0 : lineStart + 1;
-    
+
     int lineEnd = text.indexOf('\n', lineStart);
     if (lineEnd == -1) lineEnd = text.length;
 
     final currentLine = text.substring(lineStart, lineEnd);
-    
+
     if (currentLine.startsWith('    ')) {
-      _contentController.text = text.substring(0, lineStart) + currentLine.substring(4) + text.substring(lineEnd);
-      _contentController.selection = TextSelection.collapsed(offset: (cursorPos - 4).clamp(0, text.length));
+      _contentController.text =
+          text.substring(0, lineStart) +
+          currentLine.substring(4) +
+          text.substring(lineEnd);
+      _contentController.selection = TextSelection.collapsed(
+        offset: (cursorPos - 4).clamp(0, text.length),
+      );
     } else if (currentLine.startsWith('\t')) {
-      _contentController.text = text.substring(0, lineStart) + currentLine.substring(1) + text.substring(lineEnd);
-      _contentController.selection = TextSelection.collapsed(offset: (cursorPos - 1).clamp(0, text.length));
+      _contentController.text =
+          text.substring(0, lineStart) +
+          currentLine.substring(1) +
+          text.substring(lineEnd);
+      _contentController.selection = TextSelection.collapsed(
+        offset: (cursorPos - 1).clamp(0, text.length),
+      );
     }
   }
 
@@ -249,8 +269,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
 
   void _setHighlightColor(Color color) {
     setState(() {
-      _currentHighlightColor =
-          color == Colors.transparent ? null : color;
+      _currentHighlightColor = color == Colors.transparent ? null : color;
     });
   }
 
@@ -266,7 +285,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
 
     final cursorPos = selection.baseOffset;
     final text = _contentController.text;
-    
+
     if (cursorPos < 0 || text.isEmpty) return;
 
     const emptyBox = '☐';
@@ -274,18 +293,24 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
 
     int? boxIndexToToggle;
 
-    if (cursorPos < text.length && (text[cursorPos] == emptyBox || text[cursorPos] == checkedBox)) {
+    if (cursorPos < text.length &&
+        (text[cursorPos] == emptyBox || text[cursorPos] == checkedBox)) {
       boxIndexToToggle = cursorPos;
-    } else if (cursorPos > 0 && (text[cursorPos - 1] == emptyBox || text[cursorPos - 1] == checkedBox)) {
+    } else if (cursorPos > 0 &&
+        (text[cursorPos - 1] == emptyBox ||
+            text[cursorPos - 1] == checkedBox)) {
       boxIndexToToggle = cursorPos - 1;
     }
 
     if (boxIndexToToggle != null) {
       final isCurrentlyEmpty = text[boxIndexToToggle] == emptyBox;
       final newChar = isCurrentlyEmpty ? checkedBox : emptyBox;
-      
-      final newText = text.substring(0, boxIndexToToggle) + newChar + text.substring(boxIndexToToggle + 1);
-      
+
+      final newText =
+          text.substring(0, boxIndexToToggle) +
+          newChar +
+          text.substring(boxIndexToToggle + 1);
+
       _contentController.value = TextEditingValue(
         text: newText,
         selection: TextSelection.collapsed(offset: cursorPos),
@@ -311,7 +336,10 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     final content = _contentController.text.trim();
 
     // If all empty and isNew, don't create an empty note
-    final hasDrawing = _drawingData != null && _drawingData!.isNotEmpty && _drawingData != '[]';
+    final hasDrawing =
+        _drawingData != null &&
+        _drawingData!.isNotEmpty &&
+        _drawingData != '[]';
     if (title.isEmpty && content.isEmpty && !hasDrawing && widget.isNew) {
       Navigator.of(context).pop();
       return;
@@ -332,8 +360,11 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
       SnackBar(
         content: const Row(
           children: [
-            Icon(Icons.check_circle_outline_rounded,
-                color: Colors.white, size: 18),
+            Icon(
+              Icons.check_circle_outline_rounded,
+              color: Colors.white,
+              size: 18,
+            ),
             SizedBox(width: 8),
             Text(
               'Not kaydedildi ♡',
@@ -362,9 +393,10 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
       decoration: _isUnderline
           ? TextDecoration.underline
           : _isStrikethrough
-              ? TextDecoration.lineThrough
-              : TextDecoration.none,
-      decorationColor: _currentHighlightColor ?? AppTheme.textDark.withValues(alpha: 0.5),
+          ? TextDecoration.lineThrough
+          : TextDecoration.none,
+      decorationColor:
+          _currentHighlightColor ?? AppTheme.textDark.withValues(alpha: 0.5),
     );
   }
 
@@ -418,12 +450,8 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
               // Pin toggle button
               IconButton(
                 icon: Icon(
-                  _isPinned
-                      ? Icons.push_pin_rounded
-                      : Icons.push_pin_outlined,
-                  color: _isPinned
-                      ? AppTheme.deepLavender
-                      : AppTheme.textMuted,
+                  _isPinned ? Icons.push_pin_rounded : Icons.push_pin_outlined,
+                  color: _isPinned ? AppTheme.deepLavender : AppTheme.textMuted,
                   size: 22,
                 ),
                 onPressed: () {
@@ -441,8 +469,10 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.check_rounded,
-                        color: AppTheme.deepLavender),
+                    icon: const Icon(
+                      Icons.check_rounded,
+                      color: AppTheme.deepLavender,
+                    ),
                     onPressed: _saveAndPop,
                   ),
                 ),
@@ -452,60 +482,6 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           body: SafeArea(
             child: Column(
               children: [
-                // Color palette row
-                Container(
-                  height: 48,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: AppTheme.noteColors.map((color) {
-                      final isSelected = _selectedColor == color;
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedColor = color;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected
-                                  ? AppTheme.deepLavender
-                                  : Colors.white,
-                              width: isSelected ? 2.5 : 1.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    Colors.black.withValues(alpha: 0.06),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: isSelected
-                              ? const Icon(
-                                  Icons.check_rounded,
-                                  size: 16,
-                                  color: AppTheme.deepLavender,
-                                )
-                              : null,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-
                 // Note Content Area
                 Expanded(
                   child: Stack(
@@ -521,11 +497,16 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                               children: [
                                 if (_selectedIcon != null)
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 8.0, top: 2.0),
+                                    padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                      top: 2.0,
+                                    ),
                                     child: Icon(
                                       _selectedIcon,
                                       size: 26,
-                                      color: AppTheme.textDark.withValues(alpha: 0.8),
+                                      color: AppTheme.textDark.withValues(
+                                        alpha: 0.8,
+                                      ),
                                     ),
                                   ),
                                 Expanded(
@@ -557,8 +538,9 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                 Icon(
                                   Icons.access_time_rounded,
                                   size: 13,
-                                  color: AppTheme.textMuted
-                                      .withValues(alpha: 0.7),
+                                  color: AppTheme.textMuted.withValues(
+                                    alpha: 0.7,
+                                  ),
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
@@ -566,8 +548,9 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color: AppTheme.textMuted
-                                        .withValues(alpha: 0.8),
+                                    color: AppTheme.textMuted.withValues(
+                                      alpha: 0.8,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -603,12 +586,16 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                       ),
 
                       // Display saved drawing when not actively drawing
-                      if (_drawingData != null && _drawingData!.isNotEmpty && !_showDrawingCanvas)
+                      if (_drawingData != null &&
+                          _drawingData!.isNotEmpty &&
+                          !_showDrawingCanvas)
                         Positioned.fill(
                           child: IgnorePointer(
                             child: CustomPaint(
                               painter: DrawingPainter(
-                                strokes: DrawingStroke.deserializeStrokes(_drawingData!),
+                                strokes: DrawingStroke.deserializeStrokes(
+                                  _drawingData!,
+                                ),
                               ),
                               size: Size.infinite,
                             ),
@@ -647,7 +634,8 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                         _toggleTextFormat('strikethrough'),
                     onHighlightColorSelected: _setHighlightColor,
                     onFontSizeSelected: _setFontSize,
-                    onIconSelected: (icon) => setState(() => _selectedIcon = icon),
+                    onIconSelected: (icon) =>
+                        setState(() => _selectedIcon = icon),
                     onBulletListTap: _insertBulletList,
                     onNumberedListTap: _insertNumberedList,
                     onAlignLeftTap: () => _setAlignment(TextAlign.left),
@@ -682,10 +670,7 @@ class _TextSnapshot {
   final String text;
   final int cursorPosition;
 
-  const _TextSnapshot({
-    required this.text,
-    required this.cursorPosition,
-  });
+  const _TextSnapshot({required this.text, required this.cursorPosition});
 }
 
 /// Checklist item model used within the note editor
@@ -693,8 +678,5 @@ class ChecklistItem {
   String text;
   bool isCompleted;
 
-  ChecklistItem({
-    required this.text,
-    this.isCompleted = false,
-  });
+  ChecklistItem({required this.text, this.isCompleted = false});
 }

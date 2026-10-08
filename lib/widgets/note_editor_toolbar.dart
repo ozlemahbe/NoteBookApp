@@ -183,16 +183,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
         children: [
           // Header
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const Text(
-                'Metin seçenekleri',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
               GestureDetector(
                 onTap: _toggleTextOptions,
                 child: Container(
@@ -210,7 +202,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 7),
           // Row 1: Lists & Alignment
           Row(
             children: [
@@ -234,7 +226,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
