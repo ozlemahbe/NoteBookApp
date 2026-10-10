@@ -49,7 +49,11 @@ class _AddNotebookScreenState extends State<AddNotebookScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.auto_stories_rounded, color: config.fabIconColor, size: 18),
+            Icon(
+              Icons.auto_stories_rounded,
+              color: config.fabIconColor,
+              size: 18,
+            ),
             const SizedBox(width: 8),
             const Text(
               'Not defteri oluşturuldu ♡',
@@ -125,10 +129,7 @@ class _AddNotebookScreenState extends State<AddNotebookScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    icon: Icon(
-                      Icons.check_rounded,
-                      color: config.primaryColor,
-                    ),
+                    icon: Icon(Icons.check_rounded, color: config.primaryColor),
                     onPressed: _saveNotebook,
                   ),
                 ),
@@ -138,7 +139,10 @@ class _AddNotebookScreenState extends State<AddNotebookScreen> {
           body: ThemedBackground(
             child: SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -251,12 +255,13 @@ class _AddNotebookScreenState extends State<AddNotebookScreen> {
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 0.72,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.72,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
                       itemCount: NotebookCoverDesign.presets.length,
                       itemBuilder: (context, index) {
                         final preset = NotebookCoverDesign.presets[index];

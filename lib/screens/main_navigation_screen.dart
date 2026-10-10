@@ -9,6 +9,7 @@ import '../widgets/floating_bottom_bar.dart';
 import '../widgets/side_drawer_widget.dart';
 import 'auth_screen.dart';
 import 'home_notes_screen.dart';
+import 'documents_screen.dart';
 import 'notebooks_screen.dart';
 import 'settings_screen.dart';
 import 'trash_screen.dart';
@@ -128,11 +129,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   void _openSettingsScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const SettingsScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const SettingsScreen()));
   }
 
   void _copyNote(NoteModel note) {
@@ -256,7 +255,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     onOpenSettings: _openSettingsScreen,
                   ),
 
-                  // Tab 1: Notebooks (Günlük/Ajanda)
+                  // Tab 1: Documents and Drawings
+                  const DocumentsScreen(),
+
+                  // Tab 2: Notebooks (Günlük/Ajanda)
                   NotebooksScreen(
                     notebooks: _notebooks,
                     onAddNotebook: _addNotebook,

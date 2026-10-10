@@ -358,11 +358,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context, themeType, _) {
         final config = ThemeConfig.fromType(themeType);
 
-        return ThemedBackground(
-          child: SafeArea(
-          bottom: false,
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 110),
+        return Scaffold(
+          backgroundColor: config.scaffoldBg,
+          body: ThemedBackground(
+            child: SafeArea(
+            bottom: false,
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 110),
             children: [
               // Header
               Padding(
@@ -577,6 +579,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ],
+          ),
           ),
         ),
         );

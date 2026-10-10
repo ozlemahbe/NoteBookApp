@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 
 /// Spine decoration pattern types for notebook covers
 enum SpinePattern {
-  hearts,      // Small heart shapes (pink)
-  lines,       // Horizontal lines (lavender)
-  diagonal,    // Diagonal stripes (mint)
-  grid,        // Grid/checker (yellow)
-  dots,        // Polka dots (peach)
-  stars,       // Star shapes (blue)
-  waves,       // Wave pattern (coral)
-  zigzag,      // Zigzag (teal)
+  hearts, // Small heart shapes (pink)
+  lines, // Horizontal lines (lavender)
+  diagonal, // Diagonal stripes (mint)
+  grid, // Grid/checker (yellow)
+  dots, // Polka dots (peach)
+  stars, // Star shapes (blue)
+  waves, // Wave pattern (coral)
+  zigzag, // Zigzag (teal)
 }
 
 /// Cover design preset for custom notebooks/journals
 class NotebookCoverDesign {
   final String id;
   final String name;
-  final Color coverColor;      // Main cover background
-  final Color accentColor;     // Organic blob shapes color
-  final Color spineColor;      // Left spine strip color
+  final Color coverColor; // Main cover background
+  final Color accentColor; // Organic blob shapes color
+  final Color spineColor; // Left spine strip color
   final SpinePattern spinePattern;
   final IconData icon;
   final Color iconColor;

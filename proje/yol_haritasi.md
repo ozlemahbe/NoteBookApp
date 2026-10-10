@@ -4,7 +4,7 @@ Tarih: 8 Ekim 2026 · Durum: uygulanacak plan, tamamlanmış özellik listesi de
 
 ## 1. Amaç ve mevcut bilgi
 
-Cute Notes / Sweetie Notes; telefon ve tablette çalışan, kişiselleştirilebilir defterleri, PDF üzerine not alma ve bağımsız çizim özellikleri bulunan bir Flutter not uygulaması olacaktır. Kullanıcı internetsiz çalışabilmeli; hesabına bağladığı içeriklerini başka cihazında geri alabilmelidir. Güvenlik, veri kaybını azaltma ve mevcut görsel kimliği koruma temel gereksinimlerdir.
+Cute Notes / Sweetie Notes; telefon ve tablette çalışan, kişiselleştirilebilir defterleri, PDF üzerine not alma ,ayrı olarak tatlı notlar halinde notlar-görevler ekleyebilme ve bağımsız çizim özellikleri bulunan bir Flutter not uygulaması olacaktır. Kullanıcı internetsiz çalışabilmeli; hesabına bağladığı içeriklerini başka cihazında geri alabilmelidir. Güvenlik, veri kaybını azaltma ve mevcut görsel kimliği koruma temel gereksinimlerdir.
 
 Bu planın mevcut projeye ilişkin tek kaynağı `project_structure.md` dosyasıdır. Kaynak kod, `pubspec.yaml`, Firebase kuralları, gerçek veritabanı şeması ve çalışan uygulama incelenmemiştir. Dosya adlarının varlığı özelliklerin çalıştığını kanıtlamaz. Aşağıdaki yeni dosya ve servis isimleri öneridir; agent gerçek depoyu inceleyerek uyarlamalıdır.
 
@@ -23,14 +23,14 @@ Yapı belgesinde mevcut olduğu bildirilen bileşenler:
 
 ### 2.1 Dördüncü gezinme hedefi: Belgeler ve Çizim
 
-Mevcut ana sayfa, defterler ve ayarlar korunur; bunlara **Belgeler ve Çizim** eklenir. Dar ekranlarda başlık `Belgeler` olarak kısaltılabilir. Mevcut sekme sırası incelenir, yeni sekme Ayarlar'dan önce yerleştirilir; mevcut taslaklar ve gezinme durumu kaybolmaz.
+Mevcut ana sayfa, defterler ve ayarlar korunur; bunlara(nav bara yeni eklenecek.notlar kısmından sonra) **Belgeler ve Çizim** eklenir. Dar ekranlarda başlık `Belgeler` olarak kısaltılabilir. Mevcut sekme sırası incelenir, yeni sekme Ayarlar'dan önce yerleştirilir; mevcut taslaklar ve gezinme durumu kaybolmaz.
 
 Bu ekranın akışı:
 
-1. Üstte başlık, arama ve sağ üstte `+` ekleme düğmesi bulunur.
-2. `+` menüsünden `PDF içe aktar`, `Görsel içe aktar` veya `Yeni çizim` seçilir.
+1. Üstte başlık, arama ve sağ üstte `ataç simgesi` ile `kalem simgesi` bulunur.
+2. `ataç simgesi` tıklayınca `PDF içe aktar`, `Görsel içe aktar` seçilir.
 3. İlk bölüm **PDF ve Belgeler**: dosyalar Samsung Notes benzeri anlaşılır satırlar halinde alt alta gösterilir. Her satırda küçük önizleme, başlık, değiştirilme tarihi ve işlem menüsü vardır.
-4. PDF listesinin altında **Çizim Defterleri** bölümü bulunur. `Yeni çizim` burada da erişilebilir. Bağımsız çizimler PDF yüklemeden açılabilir ve aynı ekrandan tekrar bulunur.
+4. Ataç simgesinin yanında **Çizim Defterleri** bölümü bulunur. `kalem simgesi` ile çizim sayfasına gidilir. Bağımsız çizimler PDF yüklemeden açılabilir ve aynı ekrandan tekrar bulunur.
 5. Tabletlerde de belge satırları liste olarak kalır. Genişlik elverdiğinde seçili belgenin önizlemesi veya editörü yanında açılır; bu, listeyi zorunlu bir ızgaraya dönüştürmez.
 6. Boş liste, yükleme, içe aktarma ilerlemesi, iptal, hata ve yeniden deneme durumları tasarlanır.
 
@@ -53,7 +53,8 @@ Samsung Notes burada etkileşim referansıdır. Cute Notes'un renkleri, defter k
 
 ### 2.3 Defter kişiselleştirme
 
-Deftere dokunmak defter detayını açmalıdır. İçeride not oluşturma, düzenleme, arama, sıralama, başka deftere taşıma, sabitleme, çöp kutusu ve geri yükleme bulunur. PDF ve çizimler de bir deftere bağlanabilir; belgeler ekranında görünmeye devam eder, kopyalanmaz.
+Deftere dokunmak defter detayını açmalıdır. İçeride defter oluşturma, düzenleme, arama, sıralama, başka deftere taşıma, ekleme,sabitleme, çöp kutusu ve geri yükleme bulunur. PDF ve çizimler de bir deftere bağlanabilir; belgeler ekranında görünmeye devam eder, kopyalanmaz.oluşturduğumuz defterlerin içi adeta kitap gibi sayfalardan oluşur bir sonraki sayfayı açmalı, önceki sayfayı açmalı, sola kaydırarak sayfa açmalı, sağ kaydırarak sayfa kapatmalı vb. davranışı olmalı. sayfaların kenarından tutarak sağa sola kaydırarak önceki ve sonraki sayfayı açmalı ve kapamalı, aynı zamanda sayfaları silmeli ve sayfaları başka defterlere eklemeli vb. 
+sayfalara not alırken dokunduğumuzda sayfa içeriği aşağı kaymalı ve kalemi seçtiğimizde sayfanın üstünde notlarımızı yazabileceğimiz bir alan gelmeli.hatta bu deftere alttan seçenek olarak sticker ekleyip defterin istediğimiz bir yerine sürüklenebilmeli ve istediğimiz büyüklüğe getirilebilmeli, döndürülebilmeli.   
 
 İlk kişiselleştirme araçları: defter adı, kapak rengi/deseni, mevcut stile uygun ikon, varsayılan kağıt türü (boş, çizgili, kareli, noktalı) ve favori/sabitleme. Özel kapak görseli; dosya boyutu, kırpma ve şifreli saklama tamamlandıktan sonra eklenir. Not başına tema uygulamanın genel temasını değiştirmez. Defterin varsayılan kağıdını değiştirmek eski sayfaları kendiliğinden dönüştürmez.
 
@@ -61,7 +62,7 @@ Defter silerken varsayılan davranış içeriklerini koruyup `Deftersiz` alanın
 
 ### 2.4 Telefon, tablet ve düzenlenebilir geliştirme akışı
 
-İlk hedef Android telefon ve Android tablettir; iOS telefon/tablet için kodun taşınabilirliği korunur, destek iddiası gerçek iOS derlemesi ve cihaz testi sonrasında yapılır. Yön değişimi, bölünmüş ekran, sanal klavye, yazı büyütme, dokunma ve desteklenen kalem girdisi hesaba katılır.
+İlk hedef Android telefon ve Android tablettir; iOS telefon/tablet için kodun taşınabilirliği korunur, destek iddiası gerçek iOS derlemesi ve cihaz testi sonrasında yapılır. Yön değişimi, bölünmüş ekran, sanal klavye, yazı büyütme, dokunma ve desteklenen kalem girdisi hesaba katılır.Ama öncelik android telefon ve tablet içindir.
 
 Her faz bir çalışan sonuç üretir. Geliştirici aynı veri setiyle ekranları deneyebilir, tema/kağıt/araç parametrelerini merkezi ayarlardan değiştirebilir ve bir sonraki adıma geçmeden hataları düzeltebilir. Geçici deneme verileri gerçek kullanıcı hesabına karıştırılmaz.
 
@@ -214,8 +215,8 @@ Geliştirici gerçek depoda şu doğrulamaları çalıştırır: proje biçim ko
 
 | Faz | Durum | Test / çıktı | Bilinen engel |
 | --- | --- | --- | --- |
-| F0 | Başlanmadı | — | Kaynak depo incelenmedi |
-| F1 | Başlanmadı | — | F0 |
+| F0 | Tamamlandı | Mevcut kod incelendi. pdfrx+pdf prototipi ve crypto prototipi yazılıp test edildi (test klasöründe). mevcut_durum_raporu.md oluşturuldu. | PDF prototipi `flutter test` headless ortamında `pdfrx` native binding hatası verdiğinden (beklenen durum), mock export ile doğrulandı. |
+| F1 | Başlanmadı | — | F0 tamamlandı, F1'e geçilebilir. |
 | F2 | Başlanmadı | — | F1 |
 | F3 | Başlanmadı | — | F1 |
 | F4 | Başlanmadı | — | F2–F3 |

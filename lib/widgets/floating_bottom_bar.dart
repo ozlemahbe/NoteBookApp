@@ -38,6 +38,11 @@ class FloatingBottomBar extends StatelessWidget {
       label: 'Ana Sayfa',
     ),
     NavItem(
+      icon: Icons.folder_outlined,
+      activeIcon: Icons.folder_rounded,
+      label: 'Belgeler',
+    ),
+    NavItem(
       icon: Icons.auto_stories_outlined,
       activeIcon: Icons.auto_stories_rounded,
       label: 'Defterler',
@@ -94,14 +99,15 @@ class FloatingBottomBar extends StatelessWidget {
                     final item = _items[index];
                     final isSelected = currentIndex == index;
 
-                    return GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => onTabSelected(index),
+                    return Expanded(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => onTabSelected(index),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeOutCubic,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
+                          horizontal: 12,
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
@@ -153,6 +159,7 @@ class FloatingBottomBar extends StatelessWidget {
                           ],
                         ),
                       ),
+                    ),
                     );
                   }),
                 ),

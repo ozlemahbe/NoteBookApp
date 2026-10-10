@@ -5,6 +5,7 @@ import '../theme/app_theme_config.dart';
 import '../widgets/notebook_cover_widget.dart';
 import '../widgets/themed_background.dart';
 import 'add_notebook_screen.dart';
+import 'notebook_viewer_screen.dart';
 
 /// Screen 2: Notebooks (Günlük/Ajanda) matching Sketch 2:
 /// - Grid of notebooks with book spines, centered icons, and titles
@@ -23,9 +24,7 @@ class NotebooksScreen extends StatelessWidget {
 
   void _openAddNotebook(BuildContext context) async {
     final result = await Navigator.of(context).push<NotebookModel>(
-      MaterialPageRoute(
-        builder: (context) => const AddNotebookScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const AddNotebookScreen()),
     );
 
     if (result != null) {
@@ -63,10 +62,7 @@ class NotebooksScreen extends StatelessWidget {
               SizedBox(
                 width: 100,
                 height: 135,
-                child: NotebookCoverWidget(
-                  notebook: nb,
-                  compact: true,
-                ),
+                child: NotebookCoverWidget(notebook: nb, compact: true),
               ),
               const SizedBox(height: 14),
 
@@ -81,10 +77,7 @@ class NotebooksScreen extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '${nb.pageCount} sayfa yazıldı • ${nb.createdAt.day}.${nb.createdAt.month}.${nb.createdAt.year}',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: sheetConfig.textMuted,
-                ),
+                style: TextStyle(fontSize: 13, color: sheetConfig.textMuted),
               ),
               const SizedBox(height: 20),
 
@@ -113,8 +106,11 @@ class NotebooksScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      icon: Icon(Icons.delete_outline_rounded,
-                          size: 18, color: Colors.red.shade400),
+                      icon: Icon(
+                        Icons.delete_outline_rounded,
+                        size: 18,
+                        color: Colors.red.shade400,
+                      ),
                       label: Text(
                         'Defteri Sil',
                         style: TextStyle(
@@ -136,26 +132,18 @@ class NotebooksScreen extends StatelessWidget {
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Row(
-                              children: [
-                                Icon(Icons.favorite_rounded,
-                                    color: Colors.white, size: 16),
-                                SizedBox(width: 8),
-                                Text('Defter açıldı (Demo) ♡'),
-                              ],
-                            ),
-                            backgroundColor: sheetConfig.accentColor,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotebookViewerScreen(notebook: nb),
                           ),
                         );
                       },
-                      icon: const Icon(Icons.menu_book_rounded,
-                          size: 18, color: Colors.white),
+                      icon: const Icon(
+                        Icons.menu_book_rounded,
+                        size: 18,
+                        color: Colors.white,
+                      ),
                       label: const Text(
                         'Sayfaları Oku',
                         style: TextStyle(
@@ -183,122 +171,128 @@ class NotebooksScreen extends StatelessWidget {
 
         return ThemedBackground(
           child: Stack(
-      children: [
-        SafeArea(
-          bottom: false,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header title
-              Padding(
-                padding: const EdgeInsets.fromLTRB(22, 16, 22, 8),
-                child: Row(
+              SafeArea(
+                bottom: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: config.activeNavBox,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.auto_stories_rounded,
-                        color: config.primaryColor,
-                        size: 20,
+                    // Header title
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(22, 16, 22, 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: config.activeNavBox,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.auto_stories_rounded,
+                              color: config.primaryColor,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Günlükler & Ajanda',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: config.headerTextColor,
+                                ),
+                              ),
+                              Text(
+                                'Özel kapaklı not defterlerin',
+                                style: TextStyle(
+                                  fontSize: 12.5,
+                                  color: config.headerMutedColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Günlükler & Ajanda',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: config.headerTextColor,
-                          ),
-                        ),
-                        Text(
-                          'Özel kapaklı not defterlerin',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            color: config.headerMutedColor,
-                          ),
-                        ),
-                      ],
+
+                    // Notebooks 2-column Grid matching Sketch 2
+                    Expanded(
+                      child: notebooks.isEmpty
+                          ? _buildEmptyState(context)
+                          : GridView.builder(
+                              padding: const EdgeInsets.fromLTRB(
+                                20,
+                                16,
+                                20,
+                                100,
+                              ),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 0.72,
+                                    crossAxisSpacing: 16,
+                                    mainAxisSpacing: 18,
+                                  ),
+                              itemCount: notebooks.length,
+                              itemBuilder: (context, index) {
+                                final notebook = notebooks[index];
+                                return NotebookCoverWidget(
+                                  notebook: notebook,
+                                  onTap: () =>
+                                      _showNotebookDetails(context, notebook),
+                                );
+                              },
+                            ),
                     ),
                   ],
                 ),
               ),
 
-              // Notebooks 2-column Grid matching Sketch 2
-              Expanded(
-                child: notebooks.isEmpty
-                    ? _buildEmptyState(context)
-                    : GridView.builder(
-                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.72,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 18,
-                        ),
-                        itemCount: notebooks.length,
-                        itemBuilder: (context, index) {
-                          final notebook = notebooks[index];
-                          return NotebookCoverWidget(
-                            notebook: notebook,
-                            onTap: () => _showNotebookDetails(context, notebook),
-                          );
-                        },
+              // FAB: Soft '+' button to open "Not defteri Ekle"
+              Positioned(
+                right: 24,
+                bottom: 100,
+                child: Container(
+                  width: 58,
+                  height: 58,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: config.fabGradient,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: config.fabShadowColor.withValues(alpha: 0.4),
+                        blurRadius: 16,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 6),
                       ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    shape: const CircleBorder(),
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: () => _openAddNotebook(context),
+                      child: Icon(
+                        Icons.add_rounded,
+                        size: 30,
+                        color: config.fabIconColor,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
-        ),
-
-        // FAB: Soft '+' button to open "Not defteri Ekle"
-        Positioned(
-          right: 24,
-          bottom: 100,
-          child: Container(
-            width: 58,
-            height: 58,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: config.fabGradient,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: config.fabShadowColor.withValues(alpha: 0.4),
-                  blurRadius: 16,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              shape: const CircleBorder(),
-              child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: () => _openAddNotebook(context),
-                child: Icon(
-                  Icons.add_rounded,
-                  size: 30,
-                  color: config.fabIconColor,
-                ),
-              ),
-            ),
-          ),
-        ),
-          ],
-        ),
-      );
+        );
       },
     );
   }
@@ -333,10 +327,7 @@ class NotebooksScreen extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             '+ butonuna basarak ilk kapaklı günlüğünü oluştur',
-            style: TextStyle(
-              fontSize: 13,
-              color: config.textMuted,
-            ),
+            style: TextStyle(fontSize: 13, color: config.textMuted),
           ),
         ],
       ),
