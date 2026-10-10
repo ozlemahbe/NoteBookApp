@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/notebook_model.dart';
 import '../theme/app_theme.dart';
@@ -44,7 +43,7 @@ class NotebookPageData {
 class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
   final PageController _pageController = PageController();
   late List<NotebookPageData> _pages;
-  
+
   // Track currently active sticker for interaction
   StickerData? _activeSticker;
 
@@ -83,15 +82,38 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Sayfa Arka Planı', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                'Sayfa Arka Planı',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildBgOption(pageIndex, PagePattern.blank, 'Boş', Icons.crop_din_rounded),
-                  _buildBgOption(pageIndex, PagePattern.lined, 'Çizgili', Icons.reorder_rounded),
-                  _buildBgOption(pageIndex, PagePattern.squared, 'Kareli', Icons.grid_4x4_rounded),
-                  _buildBgOption(pageIndex, PagePattern.dotted, 'Noktalı', Icons.blur_on_rounded),
+                  _buildBgOption(
+                    pageIndex,
+                    PagePattern.blank,
+                    'Boş',
+                    Icons.crop_din_rounded,
+                  ),
+                  _buildBgOption(
+                    pageIndex,
+                    PagePattern.lined,
+                    'Çizgili',
+                    Icons.reorder_rounded,
+                  ),
+                  _buildBgOption(
+                    pageIndex,
+                    PagePattern.squared,
+                    'Kareli',
+                    Icons.grid_4x4_rounded,
+                  ),
+                  _buildBgOption(
+                    pageIndex,
+                    PagePattern.dotted,
+                    'Noktalı',
+                    Icons.blur_on_rounded,
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -102,7 +124,12 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
     );
   }
 
-  Widget _buildBgOption(int pageIndex, PagePattern pattern, String label, IconData icon) {
+  Widget _buildBgOption(
+    int pageIndex,
+    PagePattern pattern,
+    String label,
+    IconData icon,
+  ) {
     final isSelected = _pages[pageIndex].pattern == pattern;
     return GestureDetector(
       onTap: () {
@@ -116,9 +143,13 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isSelected ? Colors.blue.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.1),
+              color: isSelected
+                  ? Colors.blue.withValues(alpha: 0.2)
+                  : Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: isSelected ? Border.all(color: Colors.blue, width: 2) : null,
+              border: isSelected
+                  ? Border.all(color: Colors.blue, width: 2)
+                  : null,
             ),
             child: Icon(icon, color: isSelected ? Colors.blue : Colors.black87),
           ),
@@ -146,21 +177,32 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
     final config = ThemeConfig.fromType(themeType);
 
     return Scaffold(
-      backgroundColor: config.isDark ? const Color(0xFF1E1733) : const Color(0xFFF7F4F9),
+      backgroundColor: config.isDark
+          ? const Color(0xFF1E1733)
+          : const Color(0xFFF7F4F9),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: config.headerTextColor),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: config.headerTextColor,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.notebook.title,
-          style: TextStyle(color: config.headerTextColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: config.headerTextColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add_circle_outline_rounded, color: config.primaryColor),
+            icon: Icon(
+              Icons.add_circle_outline_rounded,
+              color: config.primaryColor,
+            ),
             onPressed: _addPage,
           ),
         ],
@@ -187,7 +229,7 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
       child: Container(
         margin: const EdgeInsets.fromLTRB(20, 10, 20, 40),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: config.cardBackground,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -202,7 +244,10 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
             // Custom Background Pattern
             Positioned.fill(
               child: CustomPaint(
-                painter: _PagePatternPainter(pattern: pageData.pattern),
+                painter: _PagePatternPainter(
+                  pattern: pageData.pattern,
+                  config: config,
+                ),
               ),
             ),
 
@@ -212,15 +257,15 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
                 padding: const EdgeInsets.all(24.0),
                 child: TextField(
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Buraya dokunarak yazmaya başlayın...',
-                    hintStyle: TextStyle(color: Colors.black38),
+                    hintStyle: TextStyle(color: config.textHint),
                   ),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     height: 1.6, // Matches lined paper height
-                    color: Colors.black87,
+                    color: config.textDark,
                   ),
                   onChanged: (val) => pageData.textContent = val,
                 ),
@@ -242,7 +287,10 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
                     if (_activeSticker == sticker) {
                       setState(() {
                         sticker.position += details.focalPointDelta;
-                        sticker.scale = (sticker.scale * details.scale).clamp(0.5, 5.0);
+                        sticker.scale = (sticker.scale * details.scale).clamp(
+                          0.5,
+                          5.0,
+                        );
                         sticker.rotation += details.rotation;
                       });
                     }
@@ -258,7 +306,10 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
                           height: 80,
                           decoration: _activeSticker == sticker
                               ? BoxDecoration(
-                                  border: Border.all(color: Colors.blue, width: 2),
+                                  border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2,
+                                  ),
                                 )
                               : null,
                           child: Center(
@@ -282,7 +333,10 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
               right: 0,
               child: Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black87,
                     borderRadius: BorderRadius.circular(30),
@@ -291,20 +345,33 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.wallpaper_rounded, color: Colors.white),
+                        icon: const Icon(
+                          Icons.wallpaper_rounded,
+                          color: Colors.white,
+                        ),
                         onPressed: () => _showBackgroundPicker(index),
                         tooltip: 'Arka Plan',
                       ),
                       IconButton(
-                        icon: const Icon(Icons.emoji_emotions_rounded, color: Colors.white),
+                        icon: const Icon(
+                          Icons.emoji_emotions_rounded,
+                          color: Colors.white,
+                        ),
                         onPressed: () => _addSticker(index),
                         tooltip: 'Sticker Ekle',
                       ),
                       IconButton(
-                        icon: const Icon(Icons.brush_rounded, color: Colors.white),
+                        icon: const Icon(
+                          Icons.brush_rounded,
+                          color: Colors.white,
+                        ),
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Çizim modu (Belgeler ekranı ile aynı motoru kullanacak)')),
+                            const SnackBar(
+                              content: Text(
+                                'Çizim modu (Belgeler ekranı ile aynı motoru kullanacak)',
+                              ),
+                            ),
                           );
                         },
                         tooltip: 'Çizim',
@@ -321,7 +388,10 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
               right: 20,
               child: Text(
                 '${index + 1} / ${_pages.length}',
-                style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -333,15 +403,16 @@ class _NotebookViewerScreenState extends State<NotebookViewerScreen> {
 
 class _PagePatternPainter extends CustomPainter {
   final PagePattern pattern;
+  final ThemeConfig config;
 
-  _PagePatternPainter({required this.pattern});
+  _PagePatternPainter({required this.pattern, required this.config});
 
   @override
   void paint(Canvas canvas, Size size) {
     if (pattern == PagePattern.blank) return;
 
     final paint = Paint()
-      ..color = Colors.blue.withValues(alpha: 0.15)
+      ..color = config.primaryColor.withValues(alpha: 0.15)
       ..strokeWidth = 1.0;
 
     if (pattern == PagePattern.lined) {
@@ -361,7 +432,11 @@ class _PagePatternPainter extends CustomPainter {
       const double spacing = 24.0;
       for (double y = spacing / 2; y < size.height; y += spacing) {
         for (double x = spacing / 2; x < size.width; x += spacing) {
-          canvas.drawCircle(Offset(x, y), 1.5, paint..style = PaintingStyle.fill);
+          canvas.drawCircle(
+            Offset(x, y),
+            1.5,
+            paint..style = PaintingStyle.fill,
+          );
         }
       }
     }
@@ -369,6 +444,6 @@ class _PagePatternPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _PagePatternPainter oldDelegate) {
-    return oldDelegate.pattern != pattern;
+    return oldDelegate.pattern != pattern || oldDelegate.config != config;
   }
 }

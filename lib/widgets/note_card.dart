@@ -115,9 +115,8 @@ class NoteCard extends StatelessWidget {
   }
 
   Color _resolveCardColor(ThemeConfig config) {
-    if (config.notePaperColors.isEmpty) return note.color;
-    final colorIndex = index % config.notePaperColors.length;
-    return config.notePaperColors[colorIndex];
+    if (config.notePaperColors.isEmpty) return Colors.white;
+    return config.notePaperColors[note.colorIndex % config.notePaperColors.length];
   }
 
   Widget _buildThemeCornerIcon(ThemeConfig config) {

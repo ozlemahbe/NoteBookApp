@@ -355,7 +355,9 @@ class _TrashScreenState extends State<TrashScreen> {
   }
 
   Widget _buildDeletedNoteCard(NoteModel note, ThemeConfig config) {
-    final noteBg = config.isDark ? const Color(0xFF1E1733) : note.color;
+    final noteBg = config.isDark 
+        ? const Color(0xFF1E1733) 
+        : (config.notePaperColors.isNotEmpty ? config.notePaperColors[note.colorIndex % config.notePaperColors.length] : Colors.white);
     final formattedDate =
         '${note.date.day.toString().padLeft(2, '0')}.${note.date.month.toString().padLeft(2, '0')}.${note.date.year} ${note.date.hour.toString().padLeft(2, '0')}:${note.date.minute.toString().padLeft(2, '0')}';
 

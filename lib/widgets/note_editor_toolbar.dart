@@ -32,6 +32,8 @@ class NoteEditorToolbar extends StatefulWidget {
   final double currentFontSize;
   final Color? currentHighlightColor;
   final IconData? currentIcon;
+  final Function(Color)? onNoteColorSelected;
+  final Color? currentNoteColor;
 
   const NoteEditorToolbar({
     super.key,
@@ -62,6 +64,8 @@ class NoteEditorToolbar extends StatefulWidget {
     this.currentFontSize = 16,
     this.currentHighlightColor,
     this.currentIcon,
+    this.onNoteColorSelected,
+    this.currentNoteColor,
   });
 
   @override
@@ -74,6 +78,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
   bool _showHighlightColors = false;
   bool _showFontSizes = false;
   bool _showIconOptions = false;
+  bool _showNoteColors = false;
 
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
@@ -98,37 +103,51 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
     super.dispose();
   }
 
+  void _hideAll() {
+    _showTextOptions = false;
+    _showHighlightColors = false;
+    _showFontSizes = false;
+    _showIconOptions = false;
+    _showNoteColors = false;
+  }
+
   void _toggleTextOptions() {
     setState(() {
-      _showTextOptions = !_showTextOptions;
-      _showHighlightColors = false;
-      _showFontSizes = false;
+      final wasShowing = _showTextOptions;
+      _hideAll();
+      _showTextOptions = !wasShowing;
     });
   }
 
   void _toggleHighlightColors() {
     setState(() {
-      _showHighlightColors = !_showHighlightColors;
-      _showTextOptions = false;
-      _showFontSizes = false;
+      final wasShowing = _showHighlightColors;
+      _hideAll();
+      _showHighlightColors = !wasShowing;
     });
   }
 
   void _toggleFontSizes() {
     setState(() {
-      _showFontSizes = !_showFontSizes;
-      _showTextOptions = false;
-      _showHighlightColors = false;
-      _showIconOptions = false;
+      final wasShowing = _showFontSizes;
+      _hideAll();
+      _showFontSizes = !wasShowing;
     });
   }
 
   void _toggleIconOptions() {
     setState(() {
-      _showIconOptions = !_showIconOptions;
-      _showTextOptions = false;
-      _showHighlightColors = false;
-      _showFontSizes = false;
+      final wasShowing = _showIconOptions;
+      _hideAll();
+      _showIconOptions = !wasShowing;
+    });
+  }
+
+  void _toggleNoteColors() {
+    setState(() {
+      final wasShowing = _showNoteColors;
+      _hideAll();
+      _showNoteColors = !wasShowing;
     });
   }
 
@@ -157,6 +176,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
     if (_showHighlightColors) return _buildHighlightPanel();
     if (_showFontSizes) return _buildFontSizePanel();
     if (_showIconOptions) return _buildIconOptionsPanel();
+    if (_showNoteColors) return _buildNoteColorPanel();
     return const SizedBox.shrink();
   }
 
@@ -166,7 +186,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF252525), // Dark background matching the photo
+        color: AppTheme.current.cardBackground.withValues(alpha: 0.95), // Adapt to theme
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -191,7 +211,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                     color: Colors.white.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.close_rounded,
                     color: Colors.white,
                     size: 18,
@@ -206,7 +226,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3A3A3A),
+                  color: AppTheme.current.isDark ? const Color(0xFF3A3A3A) : Colors.black.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -228,7 +248,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF3A3A3A),
+                    color: AppTheme.current.isDark ? const Color(0xFF3A3A3A) : Colors.black.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -261,7 +281,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3A3A3A),
+                  color: AppTheme.current.isDark ? const Color(0xFF3A3A3A) : Colors.black.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -309,7 +329,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF3A3A3A),
+                    color: AppTheme.current.isDark ? const Color(0xFF3A3A3A) : Colors.black.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -347,7 +367,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, color: Colors.white, size: 22),
+        child: Icon(icon, color: AppTheme.current.textDark, size: 22),
       ),
     );
   }
@@ -374,7 +394,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
         child: Text(
           text,
           style: TextStyle(
-            color: Colors.white,
+            color: AppTheme.current.textDark,
             fontSize: 18,
             fontWeight: weight,
             fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
@@ -383,7 +403,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                 : isStrikethrough
                 ? TextDecoration.lineThrough
                 : TextDecoration.none,
-            decorationColor: Colors.white,
+            decorationColor: AppTheme.current.textDark,
             decorationThickness: 2,
           ),
         ),
@@ -424,7 +444,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isSelected
-                      ? AppTheme.deepLavender
+                      ? AppTheme.current.primaryColor
                       : color == null
                       ? Colors.grey.withValues(alpha: 0.3)
                       : Colors.white,
@@ -433,7 +453,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                 boxShadow: [
                   if (isSelected)
                     BoxShadow(
-                      color: (color ?? AppTheme.primaryLavender).withValues(
+                      color: (color ?? AppTheme.current.accentColor).withValues(
                         alpha: 0.4,
                       ),
                       blurRadius: 6,
@@ -447,15 +467,69 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                       color: Colors.grey.withValues(alpha: 0.5),
                     )
                   : isSelected
-                  ? const Icon(
+                  ? Icon(
                       Icons.check_rounded,
                       size: 16,
-                      color: AppTheme.deepLavender,
+                      color: AppTheme.current.primaryColor,
                     )
                   : null,
             ),
           );
         }).toList(),
+      ),
+    );
+  }
+
+  /// Note Color picker panel
+  Widget _buildNoteColorPanel() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: _panelDecoration(),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: AppTheme.current.notePaperColors.map((color) {
+            final isSelected = widget.currentNoteColor == color;
+            return GestureDetector(
+              onTap: () {
+                if (widget.onNoteColorSelected != null) {
+                  widget.onNoteColorSelected!(color);
+                }
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected
+                        ? AppTheme.current.primaryColor
+                        : Colors.white,
+                    width: isSelected ? 2.5 : 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: isSelected
+                    ? Icon(
+                        Icons.check_rounded,
+                        size: 16,
+                        color: AppTheme.current.primaryColor,
+                      )
+                    : null,
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -480,12 +554,12 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
               height: 36,
               decoration: BoxDecoration(
                 color: isSelected
-                    ? AppTheme.primaryLavender.withValues(alpha: 0.25)
+                    ? AppTheme.current.accentColor.withValues(alpha: 0.25)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: isSelected
-                      ? AppTheme.deepLavender.withValues(alpha: 0.5)
+                      ? AppTheme.current.primaryColor.withValues(alpha: 0.5)
                       : Colors.transparent,
                 ),
               ),
@@ -496,8 +570,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                     fontSize: 12,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: isSelected
-                        ? AppTheme.deepLavender
-                        : AppTheme.textMuted,
+                        ? AppTheme.current.primaryColor
+                        : AppTheme.current.textMuted,
                   ),
                 ),
               ),
@@ -547,12 +621,12 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppTheme.primaryLavender.withValues(alpha: 0.25)
+                      ? AppTheme.current.accentColor.withValues(alpha: 0.25)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: isSelected
-                        ? AppTheme.deepLavender.withValues(alpha: 0.5)
+                        ? AppTheme.current.primaryColor.withValues(alpha: 0.5)
                         : Colors.transparent,
                   ),
                 ),
@@ -567,8 +641,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                           icon,
                           size: 20,
                           color: isSelected
-                              ? AppTheme.deepLavender
-                              : AppTheme.textMuted,
+                              ? AppTheme.current.primaryColor
+                              : AppTheme.current.textMuted,
                         ),
                 ),
               ),
@@ -585,11 +659,11 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
       margin: const EdgeInsets.only(left: 12, right: 12, bottom: 8, top: 2),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
+        color: AppTheme.current.cardBackground.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.deepLavender.withValues(alpha: 0.10),
+            color: AppTheme.current.primaryColor.withValues(alpha: 0.10),
             blurRadius: 16,
             spreadRadius: 1,
             offset: const Offset(0, -2),
@@ -601,7 +675,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
           ),
         ],
         border: Border.all(
-          color: AppTheme.primaryLavender.withValues(alpha: 0.25),
+          color: AppTheme.current.accentColor.withValues(alpha: 0.25),
           width: 1,
         ),
       ),
@@ -631,8 +705,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                     fontWeight: FontWeight.w700,
                     height: 1.0,
                     color: _showTextOptions
-                        ? AppTheme.deepLavender
-                        : AppTheme.textMuted,
+                        ? AppTheme.current.primaryColor
+                        : AppTheme.current.textMuted,
                   ),
                 ),
                 const SizedBox(height: 1),
@@ -641,8 +715,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                   height: 2.5,
                   decoration: BoxDecoration(
                     color: _showTextOptions
-                        ? AppTheme.deepLavender
-                        : AppTheme.textMuted,
+                        ? AppTheme.current.primaryColor
+                        : AppTheme.current.textMuted,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -678,8 +752,8 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: _showFontSizes
-                    ? AppTheme.deepLavender
-                    : AppTheme.textMuted,
+                    ? AppTheme.current.primaryColor
+                    : AppTheme.current.textMuted,
               ),
             ),
             isActive: _showFontSizes,
@@ -696,8 +770,19 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
             onTap: _toggleIconOptions,
             tooltip: 'Simge Ekle',
             iconColor: widget.currentIcon != null
-                ? AppTheme.deepLavender
+                ? AppTheme.current.primaryColor
                 : null,
+          ),
+
+          _buildDivider(),
+
+          // Note Color
+          _buildToolbarItem(
+            icon: Icons.palette_rounded,
+            isActive: _showNoteColors,
+            onTap: _toggleNoteColors,
+            tooltip: 'Not Rengi',
+            iconColor: widget.currentNoteColor,
           ),
 
           _buildDivider(),
@@ -746,7 +831,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
             height: 40,
             decoration: BoxDecoration(
               color: isActive
-                  ? AppTheme.primaryLavender.withValues(alpha: 0.22)
+                  ? AppTheme.current.accentColor.withValues(alpha: 0.22)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(14),
             ),
@@ -757,10 +842,10 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
                     icon,
                     size: 21,
                     color: !enabled
-                        ? AppTheme.textHint.withValues(alpha: 0.4)
+                        ? AppTheme.current.textHint.withValues(alpha: 0.4)
                         : isActive
-                        ? AppTheme.deepLavender
-                        : iconColor ?? AppTheme.textMuted,
+                        ? AppTheme.current.primaryColor
+                        : iconColor ?? AppTheme.current.textMuted,
                   ),
             ),
           ),
@@ -776,7 +861,7 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
       height: 22,
       margin: const EdgeInsets.symmetric(horizontal: 1),
       decoration: BoxDecoration(
-        color: AppTheme.primaryLavender.withValues(alpha: 0.25),
+        color: AppTheme.current.accentColor.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(1),
       ),
     );
@@ -784,17 +869,17 @@ class _NoteEditorToolbarState extends State<NoteEditorToolbar>
 
   BoxDecoration _panelDecoration() {
     return BoxDecoration(
-      color: Colors.white.withValues(alpha: 0.95),
+      color: AppTheme.current.cardBackground.withValues(alpha: 0.95),
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
-          color: AppTheme.deepLavender.withValues(alpha: 0.08),
+          color: AppTheme.current.primaryColor.withValues(alpha: 0.08),
           blurRadius: 10,
           offset: const Offset(0, -2),
         ),
       ],
       border: Border.all(
-        color: AppTheme.primaryLavender.withValues(alpha: 0.2),
+        color: AppTheme.current.accentColor.withValues(alpha: 0.2),
       ),
     );
   }

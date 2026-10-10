@@ -25,7 +25,7 @@ class AddEditNoteScreen extends StatefulWidget {
 class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   late TextEditingController _titleController;
   late TextEditingController _contentController;
-  late Color _selectedColor;
+  late int _selectedColorIndex;
   late String _noteId;
   late DateTime _noteDate;
   bool _isPinned = false;
@@ -61,7 +61,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     _contentController = TextEditingController(
       text: widget.note?.content ?? '',
     );
-    _selectedColor = widget.note?.color ?? AppTheme.noteColors[0];
+    _selectedColorIndex = widget.note?.colorIndex ?? 0;
     _noteDate = widget.note?.date ?? DateTime.now();
     _isPinned = widget.note?.isPinned ?? false;
     _drawingData = widget.note?.drawingData;
@@ -346,7 +346,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
       drawingData: _drawingData,
       customIcon: _selectedIcon,
       date: DateTime.now(),
-      color: _selectedColor,
+      colorIndex: _selectedColorIndex,
       isPinned: _isPinned,
     );
 
@@ -366,7 +366,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
             ),
           ],
         ),
-        backgroundColor: AppTheme.deepLavender,
+        backgroundColor: AppTheme.current.primaryColor,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -380,7 +380,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   TextStyle _buildContentTextStyle() {
     return TextStyle(
       fontSize: _currentFontSize,
-      color: _currentHighlightColor ?? AppTheme.textDark,
+      color: _currentHighlightColor ?? AppTheme.current.textDark,
       height: 1.5,
       fontWeight: _isBold ? FontWeight.w700 : FontWeight.normal,
       fontStyle: _isItalic ? FontStyle.italic : FontStyle.normal,
@@ -390,7 +390,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           ? TextDecoration.lineThrough
           : TextDecoration.none,
       decorationColor:
-          _currentHighlightColor ?? AppTheme.textDark.withValues(alpha: 0.5),
+          _currentHighlightColor ?? AppTheme.current.textDark.withValues(alpha: 0.5),
     );
   }
 
@@ -405,7 +405,9 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
       child: Hero(
         tag: 'note_hero_$_noteId',
         child: Scaffold(
-          backgroundColor: _selectedColor,
+          backgroundColor: AppTheme.current.notePaperColors.isNotEmpty 
+              ? AppTheme.current.notePaperColors[_selectedColorIndex % AppTheme.current.notePaperColors.length]
+              : Colors.white,
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
@@ -414,7 +416,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: AppTheme.current.cardBackground.withValues(alpha: 0.9),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -424,8 +426,8 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                   ],
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                  color: AppTheme.textDark,
+                  icon: Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                  color: AppTheme.current.textDark,
                   onPressed: () {
                     _saveAndPop();
                   },
@@ -437,7 +439,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
               IconButton(
                 icon: Icon(
                   _isPinned ? Icons.push_pin_rounded : Icons.push_pin_outlined,
-                  color: _isPinned ? AppTheme.deepLavender : AppTheme.textMuted,
+                  color: _isPinned ? AppTheme.current.primaryColor : AppTheme.current.textMuted,
                   size: 22,
                 ),
                 onPressed: () {
@@ -451,13 +453,13 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                 padding: const EdgeInsets.only(right: 12),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: AppTheme.current.cardBackground.withValues(alpha: 0.9),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.check_rounded,
-                      color: AppTheme.deepLavender,
+                      color: AppTheme.current.primaryColor,
                     ),
                     onPressed: _saveAndPop,
                   ),
@@ -468,60 +470,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           body: SafeArea(
             child: Column(
               children: [
-                // Color palette row
-                Container(
-                  height: 48,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 6,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: AppTheme.noteColors.map((color) {
-                      final isSelected = _selectedColor == color;
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedColor = color;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected
-                                  ? AppTheme.deepLavender
-                                  : Colors.white,
-                              width: isSelected ? 2.5 : 1.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.06),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: isSelected
-                              ? const Icon(
-                                  Icons.check_rounded,
-                                  size: 16,
-                                  color: AppTheme.deepLavender,
-                                )
-                              : null,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+
 
                 // Note Content Area
                 Expanded(
@@ -545,7 +494,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                     child: Icon(
                                       _selectedIcon,
                                       size: 26,
-                                      color: AppTheme.textDark.withValues(
+                                      color: AppTheme.current.textDark.withValues(
                                         alpha: 0.8,
                                       ),
                                     ),
@@ -553,17 +502,17 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                 Expanded(
                                   child: TextField(
                                     controller: _titleController,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.w700,
-                                      color: AppTheme.textDark,
+                                      color: AppTheme.current.textDark,
                                     ),
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                       hintText: 'Başlık...',
                                       hintStyle: TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.w600,
-                                        color: AppTheme.textHint,
+                                        color: AppTheme.current.textHint,
                                       ),
                                       border: InputBorder.none,
                                     ),
@@ -579,7 +528,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                 Icon(
                                   Icons.access_time_rounded,
                                   size: 13,
-                                  color: AppTheme.textMuted.withValues(
+                                  color: AppTheme.current.textMuted.withValues(
                                     alpha: 0.7,
                                   ),
                                 ),
@@ -589,7 +538,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color: AppTheme.textMuted.withValues(
+                                    color: AppTheme.current.textMuted.withValues(
                                       alpha: 0.8,
                                     ),
                                   ),
@@ -612,11 +561,11 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                                 textAlign: _currentTextAlign,
                                 style: _buildContentTextStyle(),
                                 onTap: _handleTextTap,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   hintText: 'Düşüncelerini buraya yaz...',
                                   hintStyle: TextStyle(
                                     fontSize: 16,
-                                    color: AppTheme.textHint,
+                                    color: AppTheme.current.textHint,
                                   ),
                                   border: InputBorder.none,
                                 ),
@@ -660,6 +609,17 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                     currentFontSize: _currentFontSize,
                     currentHighlightColor: _currentHighlightColor,
                     currentIcon: _selectedIcon,
+                    currentNoteColor: AppTheme.current.notePaperColors.isNotEmpty
+                        ? AppTheme.current.notePaperColors[_selectedColorIndex % AppTheme.current.notePaperColors.length]
+                        : Colors.white,
+                    onNoteColorSelected: (color) {
+                      setState(() {
+                        final idx = AppTheme.current.notePaperColors.indexOf(color);
+                        if (idx != -1) {
+                          _selectedColorIndex = idx;
+                        }
+                      });
+                    },
                   ),
               ],
             ),

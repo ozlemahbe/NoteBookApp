@@ -197,60 +197,60 @@ class ThemeConfig {
     emoji: '🌌',
     isDark: true,
     previewColors: const [
-      Color(0xFF2C194D),
-      Color(0xFF553285),
-      Color(0xFF9D65C9),
-      Color(0xFFD8B4F8),
+      Color(0xFF22113B),
+      Color(0xFF4C278C),
+      Color(0xFF9E5EFF),
+      Color(0xFFE2C4FF),
     ],
-    scaffoldBg: const Color(0xFF1F1338),
+    scaffoldBg: const Color(0xFF22113B),
     backgroundGradient: const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0xFF22153D),
-        Color(0xFF321D54),
-        Color(0xFF43266E),
-        Color(0xFF553285),
-        Color(0xFF673F9D),
+        Color(0xFF22113B),
+        Color(0xFF2C1552),
+        Color(0xFF3B1E6D),
+        Color(0xFF4C278C),
+        Color(0xFF6337AB),
       ],
     ),
-    textDark: const Color(0xFF341A52),
-    textMuted: const Color(0xFFBFAAD9),
-    textHint: const Color(0xFF8F76B0),
-    primaryColor: const Color(0xFF9D65C9),
-    accentColor: const Color(0xFFD8B4F8),
-    searchBarBg: const Color(0x6643266E),
-    searchBarBorderColor: const Color(0x80B388FF),
-    searchBarIconColor: const Color(0xFFD8B4F8),
+    textDark: const Color(0xFFFFFFFF), // Text should be light in dark mode!
+    textMuted: const Color(0xFFD3C2F0),
+    textHint: const Color(0xFF9981C5),
+    primaryColor: const Color(0xFFC79AFF), // brighter primary for visibility
+    accentColor: const Color(0xFFE2C4FF),
+    searchBarBg: const Color(0x663B1E6D),
+    searchBarBorderColor: const Color(0x809E5EFF),
+    searchBarIconColor: const Color(0xFFE2C4FF),
     searchBarTextColor: Colors.white,
-    searchBarHintColor: const Color(0xFFBFAAD9),
+    searchBarHintColor: const Color(0xFFD3C2F0),
     searchBarTrailingIcon: Icons.auto_awesome,
-    cardBackground: const Color(0xFFEDE4F9),
-    cardBorderColor: const Color(0x99D8B4F8),
+    cardBackground: const Color(0xFF3A2168), // Lighter dark cards
+    cardBorderColor: const Color(0x669E5EFF),
     cardShadow: [
       BoxShadow(
-        color: const Color(0xFF9D65C9).withValues(alpha: 0.25),
+        color: const Color(0xFF000000).withValues(alpha: 0.3),
         blurRadius: 18,
         spreadRadius: 2,
-        offset: const Offset(0, 6),
+        offset: const Offset(0, 8),
       ),
     ],
     notePaperColors: const [
-      Color(0xFFF2EAFE), // Dreamy lavender
-      Color(0xFFF8E7F6), // Stardust pink
-      Color(0xFFE8F1FD), // Moonlit blue
-      Color(0xFFE0EAFC), // Galaxy twilight
-      Color(0xFFFDF0E6), // Starlight vanilla
-      Color(0xFFEDE4F9), // Deep lilac dream
+      Color(0xFF3E266A), // Deep Nebula
+      Color(0xFF4C2B7A), // Galaxy Violet
+      Color(0xFF331E5B), // Void Indigo
+      Color(0xFF5A378D), // Stardust Purple
+      Color(0xFF2D1B4D), // Night Sky
+      Color(0xFF512B85), // Dark Orchid
     ],
-    navBarBg: const Color(0x8C2E1B4F),
-    navBarBorderColor: const Color(0x66B388FF),
-    activeNavBox: const Color(0xFF7B52B3),
-    activeNavBorder: const Color(0xFFD8B4F8),
+    navBarBg: const Color(0xEE2C1552),
+    navBarBorderColor: const Color(0x669E5EFF),
+    activeNavBox: const Color(0xFF6337AB),
+    activeNavBorder: const Color(0xFFC79AFF),
     activeNavIcon: Colors.white,
-    inactiveNavIcon: const Color(0xFFBFAAD9),
-    fabGradient: const [Color(0xFF8E54E9), Color(0xFFB388FF)],
-    fabShadowColor: const Color(0xFF8E54E9),
+    inactiveNavIcon: const Color(0xFF8F76B0),
+    fabGradient: const [Color(0xFF8B47E6), Color(0xFFC493FF)],
+    fabShadowColor: const Color(0xFF8B47E6),
     fabIconColor: Colors.white,
     headerTitle: 'Kozmik Rüyalar ✨',
     headerSubtitle: 'YILDIZLAR KADAR PARLAK DÜŞLER 🌙',
@@ -410,29 +410,29 @@ class ThemeConfig {
       Color(0xFFEC4899),
       Color(0xFF06B6D4),
     ],
-    scaffoldBg: const Color(0xFF0B0813),
+    scaffoldBg: const Color(0xFF130C21),
     backgroundGradient: const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        Color(0xFF0D0A17),
-        Color(0xFF130E22),
-        Color(0xFF18122C),
-        Color(0xFF1C1434),
+        Color(0xFF130C21),
+        Color(0xFF1A112C),
+        Color(0xFF211538),
+        Color(0xFF281944),
       ],
     ),
-    textDark: const Color(0xFF4A282E),
-    textMuted: const Color(0xFFA69EB8),
-    textHint: const Color(0xFF6B637E),
+    textDark: const Color(0xFFFFFFFF), // Fixed text color!
+    textMuted: const Color(0xFFC084FC),
+    textHint: const Color(0xFFA69EB8),
     primaryColor: const Color(0xFFA855F7),
     accentColor: const Color(0xFFEC4899),
-    searchBarBg: const Color(0x601F1836),
+    searchBarBg: const Color(0x60281944),
     searchBarBorderColor: const Color(0x80A855F7),
     searchBarIconColor: const Color(0xFFC084FC),
     searchBarTextColor: Colors.white,
     searchBarHintColor: const Color(0xFFA69EB8),
     searchBarTrailingIcon: Icons.auto_awesome,
-    cardBackground: const Color(0x381F1836),
+    cardBackground: const Color(0xFF2C1C4A), // Solid dark neon card
     cardBorderColor: const Color(0x66A855F7),
     cardShadow: [
       BoxShadow(
@@ -443,12 +443,12 @@ class ThemeConfig {
       ),
     ],
     notePaperColors: const [
-      Color(0x553B185F), // Neon purple frosted
-      Color(0x555F1840), // Neon magenta frosted
-      Color(0x44084C42), // Neon cyan frosted
-      Color(0x4414345F), // Neon deep blue frosted
-      Color(0x445F4810), // Neon amber frosted
-      Color(0x554A185F), // Neon violet frosted
+      Color(0xFF45226D), // Neon purple
+      Color(0xFF6B1B48), // Neon magenta
+      Color(0xFF0F5A4F), // Neon cyan
+      Color(0xFF1B4072), // Neon deep blue
+      Color(0xFF6B5216), // Neon amber
+      Color(0xFF1A1A24), // Dark grey
     ],
     navBarBg: const Color(0x99120C22),
     navBarBorderColor: const Color(0x66A855F7),
@@ -479,54 +479,54 @@ class ThemeConfig {
       Color(0xFFFFE5D9),
       Color(0xFFD8F3DC),
     ],
-    scaffoldBg: const Color(0xFFFBF9F5),
+    scaffoldBg: const Color(0xFFFCFAFC),
     backgroundGradient: const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
+        Color(0xFFFDFBFE),
         Color(0xFFFAF7FC),
-        Color(0xFFF7F2FA),
-        Color(0xFFF4EEF7),
-        Color(0xFFF0E8F5),
+        Color(0xFFF6F3F9),
+        Color(0xFFF2EDF6),
       ],
     ),
-    textDark: const Color(0xFF383042),
-    textMuted: const Color(0xFF8C8296),
-    textHint: const Color(0xFFB5ADC0),
-    primaryColor: const Color(0xFFC8B6FF),
-    accentColor: const Color(0xFF8F7193),
-    searchBarBg: const Color(0xFFF2ECF9),
-    searchBarBorderColor: Colors.transparent,
-    searchBarIconColor: const Color(0xFF8F7193),
-    searchBarTextColor: const Color(0xFF383042),
-    searchBarHintColor: const Color(0xFFB5ADC0),
+    textDark: const Color(0xFF2D2438), // Deeper for better contrast
+    textMuted: const Color(0xFF8F849E),
+    textHint: const Color(0xFFB8AECC),
+    primaryColor: const Color(0xFFB185F6), // More vibrant pastel purple
+    accentColor: const Color(0xFFFFAFCC), // Soft warm pink accent
+    searchBarBg: const Color(0xFFF0E6FA),
+    searchBarBorderColor: const Color(0x33B185F6),
+    searchBarIconColor: const Color(0xFFB185F6),
+    searchBarTextColor: const Color(0xFF2D2438),
+    searchBarHintColor: const Color(0xFFB8AECC),
     searchBarTrailingIcon: Icons.favorite_border_rounded,
     cardBackground: Colors.white,
     cardBorderColor: const Color(0x60FFFFFF),
     cardShadow: [
       BoxShadow(
-        color: Colors.black.withValues(alpha: 0.05),
-        blurRadius: 15,
+        color: const Color(0xFFB185F6).withValues(alpha: 0.12),
+        blurRadius: 18,
         spreadRadius: 2,
-        offset: const Offset(0, 5),
+        offset: const Offset(0, 6),
       ),
     ],
     notePaperColors: const [
-      Color(0xFFF5EEFD), // Soft Lilac
-      Color(0xFFFFEEF2), // Soft Rose Pink
-      Color(0xFFE8F5E9), // Soft Mint
-      Color(0xFFE3F2FD), // Soft Baby Blue
-      Color(0xFFFFF8E1), // Soft Butter Yellow
-      Color(0xFFFFEFE9), // Soft Peach
+      Color(0xFFF2E6FF), // Soft Lilac
+      Color(0xFFFFE6EB), // Soft Rose Pink
+      Color(0xFFE2F4E6), // Soft Mint
+      Color(0xFFDDF0FF), // Soft Baby Blue
+      Color(0xFFFFF4D4), // Soft Butter Yellow
+      Color(0xFFFFE5DB), // Soft Peach
     ],
-    navBarBg: const Color(0xC0FFFFFF),
-    navBarBorderColor: Colors.white,
-    activeNavBox: const Color(0xFFDDD2F7),
-    activeNavBorder: const Color(0xFFC8B6FF),
-    activeNavIcon: const Color(0xFF8F7193),
-    inactiveNavIcon: const Color(0xFF8C8296),
-    fabGradient: const [Color(0xFFC8B6FF), Color(0xFFA78BFA)],
-    fabShadowColor: const Color(0xFFC8B6FF),
+    navBarBg: const Color(0xEEFFFFFF), // More solid for better blur
+    navBarBorderColor: const Color(0x40B185F6),
+    activeNavBox: const Color(0xFFF0E6FA),
+    activeNavBorder: const Color(0xFFB185F6),
+    activeNavIcon: const Color(0xFFB185F6),
+    inactiveNavIcon: const Color(0xFFB8AECC),
+    fabGradient: const [Color(0xFFB185F6), Color(0xFFFFAFCC)],
+    fabShadowColor: const Color(0xFFB185F6).withValues(alpha: 0.4),
     fabIconColor: Colors.white,
     headerTitle: 'Bugün harika bir gün ♡',
     headerSubtitle: 'KÜÇÜK NOTLAR, BÜYÜK MUTLULUKLAR',

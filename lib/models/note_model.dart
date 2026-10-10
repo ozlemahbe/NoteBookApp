@@ -8,7 +8,7 @@ class NoteModel {
   final String? drawingData;
   final IconData? customIcon;
   final DateTime date;
-  final Color color;
+  final int colorIndex;
   final bool isPinned;
 
   const NoteModel({
@@ -18,7 +18,7 @@ class NoteModel {
     this.drawingData,
     this.customIcon,
     required this.date,
-    required this.color,
+    this.colorIndex = 0,
     this.isPinned = false,
   });
 
@@ -29,7 +29,7 @@ class NoteModel {
     String? drawingData,
     IconData? customIcon,
     DateTime? date,
-    Color? color,
+    int? colorIndex,
     bool? isPinned,
   }) {
     return NoteModel(
@@ -39,7 +39,7 @@ class NoteModel {
       drawingData: drawingData ?? this.drawingData,
       customIcon: customIcon ?? this.customIcon,
       date: date ?? this.date,
-      color: color ?? this.color,
+      colorIndex: colorIndex ?? this.colorIndex,
       isPinned: isPinned ?? this.isPinned,
     );
   }
@@ -52,7 +52,7 @@ class NoteModel {
       content:
           '• Badem sütü\n• Çilek ve muz\n• Lavanta kokulu mum\n• Pembe defter kalemi',
       date: DateTime.now().subtract(const Duration(hours: 2)),
-      color: const Color(0xFFF5EEFD), // Soft Lilac
+      colorIndex: 0,
       isPinned: true,
     ),
     NoteModel(
@@ -61,7 +61,7 @@ class NoteModel {
       content:
           '1. Sabah 20 dakika yoga\n2. Yeşil çay içmeyi unutma\n3. Kitap oku (en az 25 sayfa)',
       date: DateTime.now().subtract(const Duration(hours: 5)),
-      color: const Color(0xFFFFEEF2), // Soft Rose Pink
+      colorIndex: 1,
     ),
     NoteModel(
       id: '3',
@@ -69,7 +69,7 @@ class NoteModel {
       content:
           'Küçük Prens\nKürk Mantolu Madonna\nBilinmeyen Bir Kadının Mektubu',
       date: DateTime.now().subtract(const Duration(days: 1)),
-      color: const Color(0xFFE8F5E9), // Soft Mint
+      colorIndex: 2,
     ),
     NoteModel(
       id: '4',
@@ -77,7 +77,7 @@ class NoteModel {
       content:
           'Kaş veya Datça sahillerinde sakin ve huzurlu bir hafta sonu kampı...',
       date: DateTime.now().subtract(const Duration(days: 2)),
-      color: const Color(0xFFE3F2FD), // Soft Baby Blue
+      colorIndex: 3,
     ),
     NoteModel(
       id: '5',
@@ -85,14 +85,14 @@ class NoteModel {
       content:
           'Böğürtlenli ve vanilyalı panna cotta tarifi. Kremayı kısık ateşte kaynatıp jelatinle karıştır.',
       date: DateTime.now().subtract(const Duration(days: 3)),
-      color: const Color(0xFFFFF8E1), // Soft Butter Yellow
+      colorIndex: 4,
     ),
     NoteModel(
       id: '6',
       title: 'Haftalık İlham Sözü 🌸',
       content: 'Küçük adımlar, büyük ve güzel başlangıçların ilk melodisidir.',
       date: DateTime.now().subtract(const Duration(days: 4)),
-      color: const Color(0xFFFFEFE9), // Soft Peach
+      colorIndex: 5,
     ),
   ];
 }
